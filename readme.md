@@ -170,7 +170,7 @@ Elastic Compute Cloud = way of doing IaaS
 - Firewell rules
 - Bootstrap script: EC2 User Data
 
-**EC2 User Data:**:
+**EC2 User Data:**
 - bootstrapping = launching commands when a machine starts
 - run once at first start
 - automate boot with tasks such as installing updates, software, dowloading files from the internet, etc..
@@ -179,5 +179,25 @@ Elastic Compute Cloud = way of doing IaaS
 :warning: If we stop and relaunch an instance, its PUBLIC Ip addresses can change 
 
 **Instance Types:**
+
+- General Purpose:
+  - balance between compute, memory and networking
+  - diversity of workloads such as web servers or code repo
+- Compute Optimized:
+  - great for compute-intensive tasks that require high perf processors
+  - for ex batch processing workloads, media transcoding, high perf web servers/computing (HPC), gaming servers, machine learning, etc..
+- Memory Optimized:
+  - fast perf for workloads that process large data sets in memory
+  - for ex relational/non-relational db, distributed web scale search stores, in-memory db optimized for business intelligence (BI)
+  - app performing real-time processing of big unstructured data
+- Storage Optimized:
+  - storage-intensive tasks that require high, sequential read and write access to large data sets on local storage
+  - for ex online transaction processing (OLTP) systems, relationnal and NoSQL db, cache for in-memory db, data warehousing app, distributed file systems
+  
+
+Common pattern, for ex **m5.2xlarge**:
+- m: instance class
+- 5: generation of the hardware
+- 2xlarge: size within the instance class
 
 
