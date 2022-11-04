@@ -150,7 +150,7 @@ AWS Software Development Kit:
 
 `aws configure`: configure account on CLI with access keys
 
-## EC2
+## EC2 
 
 Elastic Compute Cloud = way of doing IaaS  
 
@@ -194,10 +194,113 @@ Elastic Compute Cloud = way of doing IaaS
   - storage-intensive tasks that require high, sequential read and write access to large data sets on local storage
   - for ex online transaction processing (OLTP) systems, relationnal and NoSQL db, cache for in-memory db, data warehousing app, distributed file systems
   
-
 Common pattern, for ex **m5.2xlarge**:
 - m: instance class
 - 5: generation of the hardware
 - 2xlarge: size within the instance class
+
+**Security Groups:**
+- Control how traffic is allowed into or out of our EC2 Instances.
+- only contain *allow* rules
+- rules can reference by IP or by security group
+- act like a "firewell" on EC2 instances
+- They regulate access to ports, authorised IP ranges, control inboud and outboud network
+- can be attached to multiple instances
+- locked down to a region/VPC (virtual private cloud) combination
+- live "outside" the EC2
+- it's good to maintain one separate security group for ssh access
+- *connection refused* will come from an app error or not launched
+- by default, all inboud traffic is blocked and all outbound is authorised
+
+**Ports:**
+- 22: SSH - log into a Linux instance
+- 21: FTP - upload files into a file share
+- 22: SFTP - upload files using SSH
+- 80: HTTP - access unsecured websites
+- 443: HTTPS - access secured websites
+- 3389: RDP (Remote Desktop Protocol) - log into a Windows instance
+
+**SSH:**
+- CLI utility for Mac, Linux and Windows >= 10
+- Also have Putty for all Windows
+- And EC2 Instance Connect thzt will use the web browser and is valid for all
+- allow to control a remote machine using the cli
+
+`ssh -i file.pem ec2-user@35.180.34.141`: connect to an ec2 instance via ssh, ec2-user is the name of the user and then the public IP address
+`chmod 0400 file.pem`: give the right to read on the pem file
+
+**Pricing:**
+- On-demand instance: short workloads, biling per second for Linux and Windows, and per hour for others
+- reserved (1 & 3 years): 
+  - Reserved Instances: long workloads, reserved instance's scope (regional or zonal)
+  - Convertible Reserved Instances: long workloads with flexible instances, allow to change instance type, family, OS, scope and tenancy
+- Saving Plans (1 & 3 years): commitment to an amount of usage, long workloads, specific instance family & AWS region but flexible with size, OS and Tenancy (Host, Dedicated or Default)
+- Spot Instances: short workloads, cheap, can lose instance
+- Dedicated Hosts: book an entire physical server, controle instance placement. Allows to address compliance requirements and use existing server-bound software licences (on demand or reserved)
+- Dedicated Instances: no other customers will share our hardware but others instances in same account use it
+- Capacity reservations: reserve capacity in a specific AZ for any duration
+
+**Shared Responsability Model for EC2:**
+- AWS:
+  - Infra and global network security
+  - isolation on physical hosts
+  - replacing faulty hardware
+  - compliance validations
+- Users:
+  - Security Groups rules
+  - OS patches and updates
+  - software and utilities installed
+  - IAM Roles assigned to EC2 & IAM user access management
+  - data security
+
+## EC2 Instance Storage
+
+**EBS Volume:**
+
+- Elastic Block Store Volume: network drive we can attach to our instances while they run, or also detach and attach to another
+- allows instances to persist data, even after their termination
+- can only be mounted to one instance at a time (at the CCP level) (but not for EBS Multi-Attach feature)
+- bound to a specific availabilty zone, if we want to move in another AZ we need to snapshot it
+- have a provisioned capacity, size un GBs, and IOPS (I/O operations per seconds) that we can upgrade
+- one instance can have severall volumes
+
+Delete on Termination attribute:
+- controls the ebs behaviour when an EC2 instance terminates
+- by default, root EBS is deleted but not others 
+
+**Snapshots:**
+- make a backup of EBS volume at a point of time
+- recommended to detach the volume before
+- can copy accross AZ or Region
+- snapshot will restore the EBS volume
+
+Features:
+- EBS Snapshot Archive: move a snap to an 'archive tier' (ebs snapshot archive), but it take 24 to 72 hours for restoring the archive
+- Recycle Bin: retention from 1 day to 1 year
+
+**AMI:**
+Amazon Machine Image
+
+- customization of an EC2 instance (software, OS, config, monitoring, etc ..)
+- faster boot/config time bc software is pre-packaged
+- built for a specific region (and can be copied accross regions)
+- launch EC2 instances from:
+  - a public AMI: AWS provided (for ex Amazon Linux 2)
+  - an own AMI: make and maintain ourself
+  - an AWS Marketplace AMI (someone else made)
+- AMI Process:
+  - Start an EC2 instance and customize it
+  - Stop the instance (for data integrity)
+  - Build an AMI that will also create EBS snapshots
+  - launch isntances from other AMIs
+
+**EC2 Image Builder:**
+- Used to automate the creation of VM or container images
+- AUtomate the creation, maintain, validate and test EC2 AMIs:
+  - Create a builder EC2 Instance that build components and applied (customize software on instance), then an AMI will be created, and after that the test suite is run by test EC2 instance. Finally, AMI is distributed (can be multiple regions)
+- Can be run on a schedule
+
+
+
 
 
