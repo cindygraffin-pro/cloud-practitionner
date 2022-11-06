@@ -6,7 +6,7 @@ Cloud Practitioner exam - CLF-C01
 
 **How the web works ?**
 
-The client will use the network to route the packets, the data into the server, then the server will rpely to us and we will get the response.  
+The client will use the network to route the packets, the data into the server, then the server will reply to us and we will get the response.  
 Client and server have an IP address that allow each one to reach other.
 
 **What is a server composed of ?**
@@ -18,7 +18,7 @@ CPU + RAM = like a brain
 - Network: cables, routers and servers connected with each other (routers, switch, DNS server)
 
 Router = networking device that forwards data packets between computer networks  
-Switch = tkaes a packet and send it to the correct server/client on the network
+Switch = takes a packet and send it to the correct server/client on the network
 
 **What is Cloud Computing ?** 
 - on-demand delivery of compute power, database storage, apps and others IT resources -> on demand self-service
@@ -226,7 +226,7 @@ Common pattern, for ex **m5.2xlarge**:
 - And EC2 Instance Connect thzt will use the web browser and is valid for all
 - allow to control a remote machine using the cli
 
-`ssh -i file.pem ec2-user@35.180.34.141`: connect to an ec2 instance via ssh, ec2-user is the name of the user and then the public IP address
+`ssh -i file.pem ec2-user@35.180.34.141`: connect to an ec2 instance via ssh, ec2-user is the name of the user and then the public IP address  
 `chmod 0400 file.pem`: give the right to read on the pem file
 
 **Pricing:**
@@ -279,7 +279,7 @@ Features:
 - Recycle Bin: retention from 1 day to 1 year
 
 **AMI:**
-Amazon Machine Image
+Amazon Machine Image: Ready to use EC2 instances with our customizations
 
 - customization of an EC2 instance (software, OS, config, monitoring, etc ..)
 - faster boot/config time bc software is pre-packaged
@@ -295,12 +295,113 @@ Amazon Machine Image
   - launch isntances from other AMIs
 
 **EC2 Image Builder:**
+- automated pipeline
 - Used to automate the creation of VM or container images
 - AUtomate the creation, maintain, validate and test EC2 AMIs:
   - Create a builder EC2 Instance that build components and applied (customize software on instance), then an AMI will be created, and after that the test suite is run by test EC2 instance. Finally, AMI is distributed (can be multiple regions)
 - Can be run on a schedule
 
+Recipe = Document that defines how the source image is going to be customized.
 
+**EC2 Instance Store:**
+- EBS volumes are network drives with "limited" performance
+- If we need a high-perf hardware disk, we use EC2 instance store (name of the hard drive attached to the physical server)
+- better I/O perf
+- lose their storage if they're stopped (ephemeral) or if hardware fails
+- good for buffer, cache, temp content
 
+**EFS:**
+- Elastic File System
+- Third type of storage we can attach onto an EC2 instance
+- managed NFS (network file system) that can be mounted on hundreds of EC2 instances
+- works with Linux EC2 instances in multi AZ
+- highly available, scalable, expensive, pay per use, no cpacity planning
+- all instances can mount the same EFS drive, using an EFS Mount Target and they will all see the same files
 
+*EFS Infrequent Access (EFS-IA):*
+- Storage class for EFS that is cost-optimized for files not accessed every day (up to 92% lower)
+- EFS will automatically move files to EFS-IA based on the last time they were accessed
+- enable EFS-IA with a Lifecycle Policy (for ex files not accessed for 60 days)
 
+**Shared Responsability Model for EC2:**
+- AWS responsibilities:
+  - Infrastructure (global network security)
+  - Replication for data for EBS volumes & EFS drives
+  - replacing faulty hardware
+  - ensuring their employees cannot access data
+- User:
+  - setting up backup/snapshot procedures
+  - setting up data encryption
+  - any data on the drives
+  - understanding risk using ec2 instance store
+
+**Amazon FSx:**
+- launch 3rd party high-perf file systems on AWS
+- fully managed service
+- FSx Windows File Server: fully managed, highly reliable and scalable windows native shared file system:
+  - built on windows file server
+  - supports SMS protocol & windown NTFS
+  - integrated with microsoft active directory
+- FSx for Lustre:
+  - fully managed, high-perf, scalable file storage for High Performance Computing (HPC)
+  - machine learning, analytics, video processing, financial modeling, etc..
+  - scales up to 100s GB/s, millions of IOPS, sub-ms latencies
+
+## ELB & ASG
+
+Elastic Load Balancing & Auto Scaling Groups 
+
+**Scalabily:**
+- app/sytem can handle greater loads by adapting, two kinds:
+  - vertical scalability: increase size of the instance, the limit is the hardware -> scale up/down
+  - horizontal scalability (= elasticity): for distributed systems, such as db, increase the number of instances/systems for the app -> scale out/in
+-linked but different to high availability  
+-> ability to accomodate a larger load by making the hardware strong (scale up) or by adding nodes (scale out)
+
+**High availability:**
+- running app/system in at least 2 AZ
+- goes in  hand with horizontal scaling
+- in order to survive a data center loss
+
+**Elasticity:**
+Once a system is scalable, elasticy means that there will be some "auto-scaling" so that the system can scale based on the load, it's "cloud-friendly" (pay per use, match demande, optimize costs)
+
+**Agility:**
+Not related to scalability, new IT resources are only a click away, which means reducing time to make those resources availables to developers from weeks to just minutes
+
+**Load Balancer:**
+- server that forward traffic to multiple servers (C2 instances) downstream
+- spread load acrosse multiple downstream instances
+- expose a single point of access (dns) to the app
+- seamlessy handle failures of downstram instances
+- do regular health checks to instances
+- provide SSL termination (HTTPS) fro websites
+- high availability across zones
+
+**ELB:**
+- managed load balancer: AWS guarantees it will be working, takes care of upgradesn maintenance, high availability
+- 3 kinds:
+  - Application Load Blanacer (HTTP/HTTPS only) - Layer 7 (high-level protocol)
+  - Network Load Balancer (ultra high perf, allows for TCP) - Layer 4 (lower level protocol)
+  - Classic Load Balancer (slowly retiring) - Layer 4 & 7 at same time
+
+**ASG:**
+- allow to create and get rid of servers very quickly
+- scale out (add EC2 instances) to match an increased load
+- scale in (rmeove EC2 instances) to match a decreased load
+- ensure we have a min/max of machines running
+- auto register/deregister instances to load balancer
+- replace unhealthy instances  
+-> run at the optimal capacity
+
+**Scaling Strategies:**
+- Manual Scaling: update the size of an ASG manually
+- Dynamic Scaling: repond to changing demand automatically:
+  - simple/step scaling: when a cloudwatch alarm is triggered (for ex CPU >70%), then add 2 units, or remove if for ex CPU <30%
+  - target tracking scaling: for ex i want the average asg cpu to stay around 40%
+  - scheduled scaling: anticipate scaling based on known usage patterns
+- Predictive Scaling:
+  - uses machine laerning to predict future traffic ahead of time
+  - auto provisions the right number of EC2 instances in advance  
+
+## S3
