@@ -405,3 +405,34 @@ Not related to scalability, new IT resources are only a click away, which means 
   - auto provisions the right number of EC2 instances in advance  
 
 ## S3
+
+**Use cases:**
+- Back up and storage
+- Disaster recovery
+- Archive
+- Hybrid Cloud Storage
+- App, Media hosting
+- Data lakes & big data analytics
+- software delivery
+- static websites
+
+**Buckets:**
+- Amazon S3 store object (files) in buckets (directories)
+- must have a globally unique name (accross all regions all acounts)
+- defined at the region level
+- Naming convention:
+  - no uppercase, no underscose
+  - 3-63 characters long
+  - not an IP
+  - not start *with xn--* and not end with *-s3alias*
+
+**Objects:**
+- Have a key that is the FULL path (for s3://my-bucket/**my-folder-name/my-file.txt**, key is the bold text)
+- key is composed from a prefix (folders) and object name (filename)
+- there's no concept of directories, it's keys with very long names that contain slashes
+- Object values are the content of the body:
+  - max obj size is 5TB (5000GB)
+  - if uploading more than 5GB, must use "multi-part upload"
+- metadata about file (list of text key/value pairs)
+- tags (unicode key/value pair - up to 10) - useful for security/lifecyle
+- version ID (if versioning is enabled)
