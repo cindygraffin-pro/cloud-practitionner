@@ -405,6 +405,7 @@ Not related to scalability, new IT resources are only a click away, which means 
   - auto provisions the right number of EC2 instances in advance  
 
 ## S3
+*on premises* refers to local hardware, meaning data is stored on local servers, computers or other devices. For example, a company may purchase a server on which to store data. After buying the server, the company sets it up at their headquarters and uploads their data. Because the server is locally operated, it's considered on-premises data storage. 
 
 **Use cases:**
 - Back up and storage
@@ -436,3 +437,243 @@ Not related to scalability, new IT resources are only a click away, which means 
 - metadata about file (list of text key/value pairs)
 - tags (unicode key/value pair - up to 10) - useful for security/lifecyle
 - version ID (if versioning is enabled)
+
+**Security:**
+- User-Based:
+  - IAM Policies: which API calls should be allowed for a specific user
+- Resource-Based: 
+  - Bucket Policies: bucket wide rules from the S3 console, allows cross account
+  - Object Acess Control List (ACL)
+  - Bucket Access Control List
+- Encryption: encrypt objects using encryption keys
+
+**Bucket Policy:**
+- JSON based
+- Used to:
+  - grant public access to the bucket
+  - force objects to be encrypted at upload
+  - grant access to another account (cross account)
+
+**Versioning:**
+- it is enabled at the bucket level
+- protct against unintended deletes (ability to restore a version)
+- easy roll back to previous version
+- any file not versioned will have version "null"
+- suspending versionning does not delete the previous versions
+
+**Replication:**
+- CRR: Cross-Region replication
+- SRR: Same_Region Replication
+- Must enable versioning in source and destination buckets
+- Buckets can be in diff AWS accounts
+- Copying is asynchronous
+- Must give proper IAM permissions to S3
+
+
+**Storage Classes:**
+- S3 can move between classes manually or using S3 Lifecycle config
+- Durability (same for all classes) and Availability (varies on storage classes)  
+
+- General Purpose:
+  - Used for frequently accessed data
+  - Big Data Analytics, mobile & gaming app, etc..
+- Infrequent Access (IA):
+  - less frequently accessed but requires rapid access when needed
+  - disaster recovery, backups (standard infrequent access: S3 Standard-IA)
+  - high durability in a single AZ, data lost when AZ is destroyed (S3 One Zone-IA), use for storing secondary backup copies 
+- Glacier: 
+  - low-cost object storage meant for archiving/backup
+  - Glacier Instant Retrieval: millisecond retrieval, min storage duration 90 days
+  - Glacier Flexible Retrieval:  expedited (1 to 5 minutes), Standard (3 to 5 hours), Buk (5 to 12 hours), min storage duration 90 days
+  - Glacier Deep Archive: long term storage, satandard (12 hours), Bulk (48h), min storage 180 days
+- Intelligent Tiering: small monthly monitoring and auto-tiering fee, moves objects automatically between access tiers based on usage:
+  - frequent access tier: default tier
+  - infrequent access tier: obj not accessed for 30 days
+  - archive instant access tier: objects not accessed for 90 days
+  - archive access tier (opt): from 90 days to 700+ days
+  - deep archive access tier (opt) from 180 days to 700+ days  
+
+**S3 Encryption:**
+- No encryption
+- Server-side encryption: server encrypts the file after receiving it
+- client-side encryption: encrypts the file before uploading it
+
+**Shared Responsability Model for S3:**
+- AWS responsibilities:
+  - Infrastructure (global network security, availability)
+  - config and vulnerability analysis
+  - compliance validation
+- User:
+  - S3 versioning
+  - bucket policies
+  - replication setup
+  - logging and monitoring
+  - storage classes
+  - data encryption
+
+**AWS Snow Family:**
+- Highly secure, portable devices to collect and process data at the edge, and migrate data into and out of AWS -> offline devices to perform data migrations (use if it takes more than a week to transfer over the network)
+- Data migration: 
+  - snowcone: small, portable computing, rugged and secured, used for edge computing, storage and data transfer (8TBs usable). Can be sent back to AWS offline or connected to the internet using AWS DataSync. Up to 24 TB 
+  - snowball edge: move TBs or PBs of data in or out of AWS, pay per data transfer job, provide block storage and Amazon S3 compatible object storage (snowball edge storage optimized or snowball edge compute optimized, the two with HDD capacity) -> 80TB usable
+  - snowmobile: transfer exabytes of data ( 1 EB = 1000 PB Petabytes = 1000000 TBs), each snowmobile has 100PB capacity. High security: temperature controlled, GPS, always under video surveillance 
+- Edge computing: snowcone, snowball edge
+
+**Edge Computing:**
+- Process data while it's being created on an edge location, that is anything that doesn't really have internet (not or limited, for ex a ship on the sea, a mining station) or limited/no access to computing power
+- Use cases are preprocess data, machine learning at the edge, transcoding media streams
+- Snow Family:
+  - snowcone: 2CPU, 4GB of memory, wired or wireless access, USB-C power
+  - snowball edge - compture optimized: 52vCPU, 208GB of RAM, optional GPU, 42 TB usable storage
+  - snowball edge - storage optimized: Up to 40vCPU, 80GB of RAM, object storage clustering available
+-> All can run EC2 Instances & AWS Lambda functions (using AWS IoT Greengrass)
+
+**Snow Family Usage Process:**
+
+1. Request Snowball devices from the AWS console for delivery
+2. Install the snowball client/AWS OpsHub on our servers
+3. Connect the snowball to our servers and copy files using the lcient
+4. Ship back the device 
+5. Data will be loaded into an S3 bucket
+6. Snowball is completely wiped
+
+**AWS OpsHub:**
+- to use snow family we need a CLI
+- software to install on copputer/laptop to manage snow family device
+
+**AWS Storage Gateway:**
+- Bridge between on-premise data anc cloud data in S3
+- Hybrid storage service to allow on-premises to seamlessly use the AWS Cloud
+- Differents Types: File Gateway, Volume Gateway, Tape Gateway
+
+
+## Databases & Analytics
+
+**AWS RDS:**
+- Relational Database Service
+- used for OLTP workloads
+- managed by AWS: automated provisioning, OS patching, continuous backups and restore to specific timestamp, multi AZ setup for DR (disaster recovery), scaling
+- can't SSH into
+- Postgres, MySQL, Aurora(AWS Proprietary db)
+
+**Amazon Aurora:**
+- support postgreSQL and MySQL
+- AWS cloud optimized, perf improvement
+- storage automatically grow in increments of 10GB, up to 64TB
+
+**RDS Deployment:**
+- Read Replicas: 
+  - scale the read workload of the DB
+  - can create up to 5 replicas
+  - writing is only done to the main db
+- Multi-AZ:
+  - Failover in case of AZ region outage (high availability)
+  - Replication cross AZ
+  - data is only written/read to the main db, and multi-az will be available only in case of an issue
+  - only one other AZ as failover
+- Multi-Region:
+  - multi-regions (read replicas)
+  - disaster recovery in case of region issue
+  - local perf for global reads
+  - cost
+
+**ElastiCache:**
+- Same way RDS is to get managed relational db but for Redis or Memcached
+- in-memory db high perf, low latency
+- reduce load off db for read intensive workloads
+
+**DynamoDB:**
+- fully managed highly available replication accross 3 AZ
+- no sql db
+- scales to massive workloads, distributed "serverless" db
+- millions of req per sec, trillions of row, 100s of TB storage
+- single digit ms latency - low latency retrieval
+- standard & Infrequent Acess (IA) table class
+- key/value db
+
+**DynamoDB Accelerator - DAX:**
+- Fully managed in memory cache for DynamoDB
+- 10x perf improvement
+
+**DynamoDB Global Tables:**
+- make a dynamoDB table accessible with low latency in multiple regions
+- users can read and write in any specific region
+- active-active replication
+
+**Redshift:**
+- based on postgreSQL, but not used for OLTP (online transaction processing)
+- OLAP (online analytical processing, computations, analytics and data warehousing)
+- load data once every hour
+- 10x better perf than other data warehouse, scale to PBs of data
+- columnar storage of data
+- massively parallel query execution (MPP), higly aailable
+- pay as you go
+- sql interface for performing the queries 
+- BI (Business Intelligence) tools such as AWS Quicksight or Tableau integrated with it
+
+**EMR:**
+- Elastic MapReduce
+- helps creating Hadoop clusters (Big Data) to analyze and process vast amount of data
+- clusters can be made of hundreds of EC2 instances
+- takes care of provisionning and configuring all those EC2 instances so that they work together and can analyze data from a bid data perspective
+- auto-scaling and integrated with Spot Instances
+
+**Athena:**
+- serverless query service to perform analytics against S3 objects
+- uses std SQL lgg to query the files
+- supports CVS, JSON, ORC, Avro and Parquet (built on Presto engine)
+- BI, analytics, logs, reporting, for ex for analyze data in S3 using serverless SQL
+
+**QuickSight:**
+- serverless machine learning-powered BI service to create interactive dashboards on the db
+- fast, auto-scalling
+
+**DocumentDB:**
+- DocumentDB is an AWS implementation for MongoDB noSQL db like aurora for relationnal db
+- mongoDB is used to store, query, and index JSON data
+- similar deployment concepts as aurora
+- auto scales to workloads with millions of req per seconds
+
+**Neptune:**
+- Fully managed graph db, for ex a popular dataset be a social network
+- highly available accross 3AZ with up to 15 read replicas
+- build and run app working with highly connected datasets - optimized for complex and hard queries
+- can store billions of relations and query the graph ms latency
+
+**QLBD:**
+- Quantum Ledger Database
+- A ledger is a book recording financial transactions
+- fully managed db, serverless, high available, replicas accros 3 AZ
+- review history of all the changes made to app data over time
+- immutable system: no entry can be removed or modified, cryptographically verifiable (block hash)
+- better perf that common ledger blockchain framework, manipulate data using SQL
+- no decentralization concept, just a central db owned by amazon, in accordance with financial regulation rules
+
+**Managed Blockchain:**
+- Blockchain makes it possible to build app where multiple parties can execute transactions without the neer for a trusted, central authority
+- managed service to:
+  - join public blockchain networks
+  - create our own scalable private network
+- compatible with the frameworks Hyperledger Fabric & Ethereum
+
+**Glue:**
+- managed extract, transform and load (ETL) service
+- useful to prepare and transform data for analytics
+- serverless service
+- Glue Data Catalog: catalog of datasets that will have a reference of everything, the colum names, the field names, types, etc ... and can be use by services such as Athena, Redshift and EMR to discover the datasets and build the proper schemas for them
+
+**DMS:**
+- Database Migration Service
+- quickly and securely migrate db to AWS, resilient, self healing
+- the source db remain available during the migration
+- supports:
+  - Homogeneous migration for ex Oracle to Oracle
+  - Heterogeneous migrations for ex microsoft sql server to aurora
+
+
+
+
+
+
+
+
