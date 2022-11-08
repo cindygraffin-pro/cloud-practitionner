@@ -671,9 +671,230 @@ Not related to scalability, new IT resources are only a click away, which means 
   - Heterogeneous migrations for ex microsoft sql server to aurora
 
 
+## ECS, Lambda, Batch, Lightsail
+
+**Docker:**
+- software development platform to deploy apps
+- apps are packaged in containers that can be run on any OS
+- scale containers up and down very quickly
+- on AWS, images can be stored in ECR (Elastic Container Registry), a private Docker registry that can be runned by ECS or Fargate
+
+**ECS:**
+- Elastic Container Service
+- Launch Docker containers
+- must provision & maintain the infra (EC2 instances)
+- AWS takes care of starting/stopping containers & has integrations with the App Load Balancer
+
+**Fargate:**
+- Launch Docker containers
+- don't neeed to provision the infra
+- serverless offering, AWS just runs container for us, based on the CPU/RAM we need
+
+**Serverless:**
+- new paradigm in which dev don't have to manage servers anymore (don't manage, provision or see), they just deploy code/functions
+- Amazon S3, DynamoDB, Fargate, Lambda...
+
+**Lambda:**
+- FaaS: Function as a Service
+- virtual functions
+- limited by time - short executions (up to 15 minutes)
+- limited temporary disk space
+- Event-Driven: run on-demand, get invoked by AWS when needed
+- scaling automated
+- pay per request/compute time
+- lambda container image: the container image must implement the Lambda Runtime API (ECS/Fargate are preferred for running Docker images)
+- NodeJS, Python, Java, C#, Golang, Ruby, custom runtime API (for ex Rust)
+
+**API Gateway:**
+- the API Gateway will proxy requests coming from client to lambda
+- fully managed serviceto easily create, publish, maintain, monitor and secure APIs
+- supports RESTful APIs and WebSocket APIs, security, user auth, API throttling, API keys
+
+**Batch:**
+Jobs that can run without end user interaction, or can be scheduled to run as resources permit, are called batch jobs. Batch processing is for those frequently used programs that can be executed with minimal human interaction. A program that reads a large file and generates a report, for example, is considered to be a batch job.
+- fully managed batch processing at any scale
+- run 100000s of computing 
+- a "batch" job is a job with a start and an end (opposed to continuous)
+- batch will dynamically launche EC2 instances or spot instances
+- provisions the right amount of compute/memory
+- we submit or schedule batch jobs and AWS Batch does the rest
+- they are defined as Docker images and run on ECS
+- no time limit
+- any runtime
+- rely on EBS/instance store for disk space
+- relied on EC2 (managed service)
+
+**Lightsail:**
+- virtual servers, storage, db and networking
+- simpler alternative to using EC2, RDS, ELB, EBS, etc..
+- setup notif and monitoring 
+- simple web APP (MEAN, NodeJs for ex), websites (wordpress for ex), dev/test env
+- high availability but no auto-scaling, limited AWS integrations
+- for person with little cloud exp
+
+## Deploying & Managing - Infra at scale
+
+**Cloud Formation:**
+- declarative way of outlining AWS infra, for any resource (define templates)
+- CF creates those for us, in the right order, with the exact confi we specify
+- Infra as code
+- stack designer create a diagram with all resources and relations
+
+**CDK:**
+- define cloud infrastructure using a familiar lgg like JS, python, java and .NET
+- the code is "compiled" into a CF template (JSON/YAML)
+- can deploy infra and app runtime code together
+- CDK App -> CDK CLI -> CF template -> CF
+
+**Elastic Beanstalk:**
+- Web App 3-tier: ELB -> EC2/ASG -> RDS/ElastiCache
+- developer centric view of deploying an app on AWS
+- it uses EC2, ASG, ELB, RDS, etc..
+- full control over the config
+- PaaS, managed service
+- just the app code is the responsability of the dev
+- 3 archi models:
+  - Single Instance deployment for dev
+  - LB + ASG fro prod or pre-prod
+  - ASG only: great for non-web apps in prod (workers)
+- supports go, java, php, python, nodeJs, docker, etc..
+- health monitoring:
+  - full monitoring suite available
+  - health agent pushes metrics to CW
+  - ckecks for app health, published health events
+
+**CodeDeploy:**
+- deploy our app automatically
+- work with EC2 instances and on-premises servers -> hybrid service
+- servers/instances must be provisioned and configured ahead of time with the CodeDeploy Agent
+
+**CodeCommit:**
+- source-control service that hosts Git-based repo
+- codes changes are auto versioned
+
+**CodeBuild:**
+- code building service in the cloud
+- compiles source code, run tests, and produce packages that are ready to be deployed
+- fully managed and serverless
+
+**CodePipeline:**
+- orchestrate the different steps to have the code auto pushed to production, for exemple: code -> build -> test -> provision -> deploy
+- basis for CICD
+- fully managed 
+
+**CodeArtifact:**
+- software packages depend on each other to be built (code dependencies), and new ones are created
+- artifact management = storing and retrieving these dependencies
+- works with common dependency management tools such as npm, yarn, pip, etc..
+- dev and codeBuild can retrieve dependencies from codeArtifact
+
+**CodeStar:**
+- unified UI to easily manage software dev activities in one place
+
+**Cloud9:**
+- cloud IDE fro writing, running and debugging code
+- allow code collab in real-time
+
+**Systems Manager (SSM):**
+- helps manage E2 and on-premises systems at scale -> hybrid service
+- get operational insights about the state of the infra
+- patching automation run commands accross an entire fleet of servers, store parameter config with SSM Parameter Store
+- for Windows and Linux OS
+- need to install SSM agent onto controlled systems, and use it to run commands, patch and config our servers
+
+**SSM Session Manager:**
+- allow to start a secure shell on EC2 and on-premises servers
+- no ssh access, bastion hosts, or ssh keys needed, neither port 22
+- supports Linux, MacOS and Windows
+- send session log data to S3 or CW Logs
+
+**OpsWorks:**
+- Chef & Puppet help config server auto or perform repetitive actions (not created by AWS)
+- work great with EC2 & on-premises VM
+- OpsWork allow to managed Chef & Puppet (alternative to SSM)
+- provision std AWS resources (db, elb, ebs volumes..)
+- different OpsWork Layers
+
+## AWS Global Archi
+
+**Global App:**
+- deployed in multiple geogaphies
+- decreased latency (time for a network packet to reach a server)
+- disaster recovery
+- attack protection
+
+**Route 53:**
+- managed DNS
+- DSN is a collection of rules and records which helps clients understand how to reach a server through URLs
+- IPv4 = A record / IPv6 = quadruple AAAA record / CNAME = hostname to hostname / hostname to AWS = Alias
+- Policies:
+  - Simple Routing Policy: no health checks (web browser to route 53)
+  - Weighted Routing Policy: attribute % traffic on instances, health check
+  - Latency Routing Policy: look where client is located, based on the latency
+  - Failover Routing Policy: Primary EC2 instance and failover one, health check on the primary, in case of fail redirect to failover
 
 
+**CloudFront:**
+- Content Delivery Network (CDN)
+- improves read perf by caching content at different edge locations, and content is served at the edge
+- 216 points of presence (edge locations)
+- great for static content that must be available everywhere
+- DDoS protection, integration with Shield and AWS web application firewell
+- cache from:
+  - S3 bucket (enhanced security with CF Origin Access Identity OAI, CF can be used as an ingress)
+  - Custom Origin (HTTP): ALB, EC2 instance, S3 website, or any HTTP backend
 
+**S3 Transfer Acceleration:**
+- increase transfer speed by transfering file to an AWS edge location which will fprward the data to the S3 bucket in the target region
+- only for uploads and downloads
 
+**AWS Global Accelerator:**
+- improve global app availability and perf using the AWS global network -> optimize the route to the app (60% improvement)
+- 2 Anycast Ip are created and the traffic is sent through edge locations
+- integrated ith AWS Shield
+- no caching, proxying packets to app running in one or more AWS regions
+- improves perf for a wide range of app over TCP/UDP
+- good for http that require static IP address
 
+**AWS Outposts:**
+- "server racks" that offers the same AWS infra, services, APIs & tools to build our own app on premises just as in the cloud
+- aws will setup and manage "outposts racks" within our on premises infra and we can start leverage AWS services on premises
+- we rare responsible for the physical security of the rack
+- low latency, local data processing, data residency, easier migration, fully managed service
+- with rack, can use EC2, EBS, S3, EKS, ECS, RDS, EMR..
 
+**AWS WaveLength:**
+- WaveLength Zones are infra deployments embedded within the telecommunication providers' datacenters at the edge of the 5G networks
+- bring AWS services to the edge of 5G networks
+- ultra-low latency
+- traffic doesn't leave the Communication Service Provider's (CSP) network
+- high bandwidth and secure connection to parent AWS Region
+- for ex for connected vehicles, interactive live video streams, AR/VR, real-time gaming, smart cities..
+
+**AWS Local Zones:**
+- places aws compute, storage, db and other selected aws services closer to end users to run latency-sensitive apps
+- extend VPC to more locations
+- For ex AWS Region N.Virginia has AWS local zones Boston, Chicago, Dallas..
+
+## Cloud Integration
+
+There are two patterns of app communication:
+- synchronous communications (app to app)
+- asynchronous/event based (app to queue to app)
+
+**SQS:**
+- producers send messages to the queue, and once messages are stored in a queue, then they can be red by consumers who will be polling the queue, that means requesting messages from the queue
+- fully managed service (serverless), used to decouple app
+- scales from 1 message per sec to 10000s
+- default retention of messages: 4 days, maximum of 14 days
+- no limit how many messages in the queue
+- messages are deleted after they're read by consumers
+- low latency
+
+**Kinesis:**
+- Kinesis = real-time big data streaming
+- managed service to collect, process, and analyze real-time streaming data at any scale
+- kinesis Data Streams: low latency streaming to ingest data at scale from hundreds of thousands of sources
+- kinesis Data Firehose: load streams into S3, Redshift, ElasticSearch
+- kinesis Data Analytics: perform real-time analytics on streams using SQL
+- kinesis Video Streams: monitor real-time video streams for analytics or ML
