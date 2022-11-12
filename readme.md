@@ -1437,21 +1437,271 @@ There are two patterns of app communication:
 - best practice is to deploy workspaces as close as users (as many workspaces regions as center locations to minimize latency)
 
 **AppStream 2.0:**
+- Desktop App Streaming Service
+- deliver to any computer without acquiring and provisioning infra (no need to connect a VDI)
+- the app is delivered from within a web browser and works with any device that has a web browser
+- allow to config an instance type per app type (CPU, RAM, GPU)
 
 **Sumerian:**
+- create and run virtualy reality (VR), augmented reality (AR) and 3D apps
+- can be used to quickly create 3D models with animations
+- ready to use template and assets, no prog or 3D expertise required
+- accessible via web-browser URLs or on popular hardware for AR/VR
 
 **IoT Core:**
+- "Internet of Things": the network of internet-connected  devices that are able to collect and transfer data
+- allow to easily connect IoT devices to the AWS Cloud, for ex connected car, fridges, lights etc..
+- serverless, secure & scalable to billions of devices and trillions of messages
+- app can communicate with devices even if they aren't connected
+- integrates with a lot of AWS services (lambda, sageMaker, S3..)
+- build IoT app that gather, process, analyze and act on data
 
-**WorkSpaces:**
+**Elastic Transcoder:**
+- used to convert media files stored in S3 into media files in the formats required by consumer playback devices (phones, etc..) 
+- it runs on a transcoding pipeline that will convert the file
 
-**WorkSpaces:**
+**AppSync:**
+- store and sync data accross mobile and web apps in real-time
+- makes use of GraphQL (mobile techno from fb)
+- client code can be generated automatically
+- integrations with DynamoDB/Lambda
+- real-time subscriptions
+- offline data synchronization
+- fine grained security
 
-**WorkSpaces:**
+**Amplify:**
+- framework that can leverage AWS AppSync
+- set of tools that helps develop and deploy scalable full stack web and mobile app
+- auth, storage, api, CI/CD, monitoring, source code...
+- Amplify Studio for setup evreything we need, then Amplify is going to configure an Amplify back-end
 
-**WorkSpaces:**
+**Device Farm:**
+- fully-managed service that tests our web and mobile apps against desktop browsers, real mobile devices and tablets
+- run tests concurrently on multiple devices (speed up exec)
+- ability to config device settings (GPS, lggn Wi-Fi, bluetooth..)
+- we can interact with devices and have reports, logs, screenshots..
 
-**WorkSpaces:**
+**AWS Backup:**
+- fully-managed service to centrally manage and automate backups accross AWS services
+- on-demand and scheduled backups, create a Backup Plan
+- supports PITR (point in time recovery)
+- retention periods, lifecycle management, backup policies
+- cross-region backup
+- cross-account backup (using AWS organizations)
 
+**Disaster Recovery Strategies:**
+- Backup and Restore: 
+  - cost minimum
+  - data is backed up into the cloud and when there is a disaster we restore it somewhere else
+- Pilot Light:
+  - we have a cloud and we're going to run the core functions
+- Warm Standby:
+  - full version of the app ready in the cloud, but at minimum size
+- Multi-Site/Hot-Site:
+  - full version of the app, at full size
+  - ready to be used
+  - maximum cost
+  
+**AWS Elastic Disaster Recovery (DRS):**
+- used to be named "CloudEndure Disaster Recovery"
+- quickly and easily recover physicaln virtual and cloud-based servers into AWS
+- for ex: protect most critical db, enterprise apps, protect data from ransomware attacks
+- continuous block-level replication for servers from corporate data center into the cloud using DRS (into a staging), thanks to an AWS Replication Agent
+- is disaster we can failover staging to production by creating bigger EC2 instances and EBS volumes
+- when the corporate data center is back online, we can perfom a failback 
 
+**AWS DataSync:**
+- move large amount of data from on-premises to AWS
+- can synchronize to S3, EFS, FSx for windows
+- replication tasks can be scheduled hourly, daily or weekly and are incremental after the first full load (thanks to AWS DataSync Agent)
+
+**AWS Application Discovery Service:**
+- plan migration projects by gathering info about on-premises data centers
+- server utilization data and dependency mapping, important for migrations
+- Agentless Discovery (AWS Agentless Discovery Connector): VM inventory, config, and perf history such as CPU, memory, and disk usage
+- Agent-based Discovery (AWS Application Discovery Agent): system config, perf, running processes, and details of the network connections btw systems
+- resulting data can be viewed within AWS Migration Hub
+
+**AWS Application Migration Service (MGN):**
+- lift and shift (rehost) solution which simplify migrating app to AWS
+- conerts physical, virutal and cloud-based servers to run natively on AWS
+- continuous replication, then cutover from staging to production when ready to migrating
+
+**AWS Fault Injection Simulator (FIS):**
+- fully managed for running fault injection experiments on AWS workloads
+- based on Chaos Engineering: stressing an app by creating disruptive events (eg sudden increase of CPU/memory), observing how the system reponds and implementing improvements
+- help uncover hidden bugs and perf bottlenecks
+- supports EC2n ECS, EKS, RDS...
+- FIS create an experiment template to generate disruptions
+
+**Step Functions:**
+- build serverless visual workflow to orchestrate our Lambda functions
+- design a graph and say at each step of the graph, in case of success or failure, what goes on next ?
+- allow to have complex workflows within AWS
+- features: sequence, parallel, conditions, timeouts, error handling..
+- can integrate with EC2, ECS, on-premises servers, API gateway, SQS, etc..
+- possibility of implementing human approval feature
+- use cases: order fulfillment, data processing, web app, any workflow
+
+**Ground Station:**
+- fully managed service that lets us control sattelite communications, process data and scale satellite operations
+- provides global network of satellite ground stations near AWS regions
+- allow to download satellite data to our AWS VPC within seconds (in S3 or EC2)
+- use cases: weather forecasting, surface imaging, communications, video broadcasts
+
+**AWS Pinpoint:**
+- scalable 2-way (outbound/inbound) marketing communicatiopn service
+- supports email, SMS, push, voice, and in-app messaging
+- ability to segment and personalize messages with the right content to customers
+- possibility to receive replies
+- scales to billion of messages per day
+- for run campaigns by sending marketing, transactional SMS messages
+- streams events (text_sucess, text_delivered..) to SNS, Kinesis Data Firehose, CW Logs
+- create message templates, delivery schedules, full campaigns and highly-targeted segments
+
+## Architecting & Ecosystem
+
+**Well Architected:**
+- Stop guessing capacity needs
+- test systems at production scale
+- automate to make architectural experimentation easier
+- allow for evolutionary archi: design based on changing requirements
+- drive archi using data
+- improve through game days: simulate app for flash sales days (stressing the system)
+
+**Design Principles:**
+- Scalability: vertical & horizontal
+- Disposable resources: servers should be disposable & easily configured
+- Automation: serverless, IaaS, auto-scalling
+- Loose Coupling: break the monolith down into smaller coupled components (a change or failure on one component should not cascade to the other)
+- think Services, not Servers: don't just use EC2, use managed services, db, serverless..  
+  
+There are 6 pillars in the Well-Architected Tool:
+
+**1. Operational Excellence**
+- Includes the ability to run and montior systems to deliver business value and to continually improve supporting processes and procedures
+- Design principles:
+  - Perform operations as code: IaaS
+  - anotate documentation
+  - make frequent, small, reversible changes
+  - refine operations procedures frequently and ensure that team members are familiar with it
+  - anticipate failure and learn from all operational failures
+- Steps:
+  - Prepare: AWS CF, AWS Config
+  - Operate: CF, Config, CloudTrail, CW, X-Ray
+  - Evolve: CF, CodeBuild, CodeCommit, CodeDeploy, CodePipeline
+
+**2. Security**
+- Includes the ability to protect informations, systems and asserts while delivering business value through risk assessments and mitigation strategies
+- Design principles:
+  - implement a strong identity foundation (IAM, least privileges..)
+  - enable traceability: integrate logs and metrics with systems to automatically repond and take action
+  - apply security at all layers
+  - automate security best practices
+  - protect data in transit and at rest
+  - keep people away from data
+  - prepare for security events
+- Services:
+  - IAM: IAM, AWS-STS, MFA token, AWS organizations
+  - Detective Controls: Config, CT, CW
+  - Infra protection: CF, VPC, Shield, WAF, Inspector
+  - Data protection: KMS, S3, ELB, EBS, RDS
+  - Incident response: IAM, CF, CW Events
+
+**3. Reliability**
+- Ability of a system to recover from infra or service disruptions, dynamically acquire computing resources to meet demand, and mitigate disruptions such as misconfigurations or transient network issues
+- Design principles: 
+  - test recovery procedures
+  - auto recover from failure
+  - scale horizontally to increase aggregare system availability
+  - stop guessing capacity
+  - manage change in automation
+- Services:
+  - foundations: IAM, VPC, Service Limits (= service Quotas), Trusted Advisor
+  - change management: Auto Scalling, CW, CT, Config
+  - Failure management: Backups, CF, S3, S3 Glacier, Route 53
+
+**4. Performance Efficiency**
+- Includes the ability to use computing resources efficiently to meet system requirements and to maintain that efficiency as demand changes and technologies evolve
+- Design principles: 
+  - democratize advanced technologies
+  - go global in minutes
+  - use serverless archi
+  - experiment more often
+  - mechanical sympathy: be aware of all AWS services
+- Services:
+  - Selection: Auto Scalling, Lambda, EBS, S3, RDS
+  - Review: CF, AWS News Blog
+  - Monitoring: CW, Lambda
+  - Tradeoffs: RDS, ElastiCache, Snowball, CF
+
+**5. Cost Optimization**
+- Includes the ability to run systems to deliver business value at the lowest price point
+- Design principles: 
+  - adopt a consumption mode: pay only for what we use
+  - measure overall efficiency
+  - stop spending money on data centers operations
+  - analyze and attribute expenditure
+  - use managed and app level services to reduce cost of ownership
+- Services:
+  - expenditure awareness: Budgets, Cost and Usage Report, Cost Explorer, Reserved Instance Reporting
+  - cost-effective resources: spot instances, reserved instance, S3 Glacier
+  - matching supply and demand: Auto Scalling, Lambda
+  - optimizing over time: Trusted Advisor, Cost and Usage Report, AWS News Blog
+
+**6. Sustainability**
+- Focuses on minimizing the environmental impacts of running cloud workloads
+- Design principles: 
+  - understand our impact: establish perf indicators and evaluate improvements
+  - establish sustainability goals: set long-term goals for each workload, model return on investment (ROI)
+  - maximize utilization
+  - anticpate and adopt new, more efficient hardware and software offerrings
+  - used managed services: shared services reduce the amount of infra, managed services help automate sustainability best practices as moving infrequent accessed data to cold storage and adjusting compute capacity
+  - reduce the downstream impacy of our cloud workloads: reduce the amout of energy or resources required to use our services and reduce the need for our customers to updgrade their devices
+- Services:
+  - EC2 Auto Scaling, Serverless Offering (Lambda, Fargate)
+  - Cost Explorer, AWS Graviton 2, EC2 T instances, spot instances
+  - EFS-IA, S3 Glacier, EBS Cold HDD volumes
+  - S3 Lifecycle Config, S3 Intelligent Tiering
+  - Amazon Data Lifecycle Manager
+  - Read Local, Write Global: RDS Read Replicas, Aurora Global DB, DynamoDB Global Table, CF
+
+**AWS Well-Architected Tool:**
+Free tool to review our archi against the 6 pillars Well-Architected Framework and adopt archi best practices
+
+**Right Sizing:**
+- EC2 has many instances types but choosing the most powerful isn't the best choice, bc the cloud is elastic
+- right sizing = process of matching instance types and sizes to our workloads perf and capacity requirements at the lowest possible cost
+- scaling up is easy so always start small
+- also the process of looking at deployed instances and identifying opportunities to eliminate or downsize whithout compromizing capacity or other requirements, which results in lower costs
+- important to right size before a Cloud Migration  nd continuously after the cloud onboarding process (reuqirements change over time)
+- CW, Cost Explorer, Trusted Advisor, 3rd party tools can help
+
+**AWS Ecosystem:**
+- AWS Blogs
+- AWS Forums (community)
+- AWS Whitepapers & Guides: for example the well architected framework
+- AWS Quick Starts:
+  - automated, glod-standard deployments in the AWS Cloud
+  - build a prod env quickly with templates
+  - leverages CF
+- AWS Solutions: vetted technology solutions for the AWS Cloud (for ex AWS Landing Zone, replaced by AWS Control Tower)
+- AWS Support
+- AWS Marketplace: digital catalog with thousands of software listings from independent software vendros (3rd party)
+- AWS Training:
+  - AWS Digital (online) and Classroom Training (in-person or virtual)
+  - AWS Private Training (for organization)
+  - Training and Certification for the US Government
+  - Training and Certification for the Enterprise
+  - AWS Academy: helps universities teach AWD
+- AWS Professional Services organization: 
+  - global team of experts
+  - They work alongside our team and a chosen member of the APN
+  - APN = AWS Partner Network:
+    - APN Technology Partners: providing hardware, connectivity and software
+    - APN Consulting Partners: profesional services firm to help build on AWS
+    - APN Training Partners: find who can help us learn AWS
+    - AWS Competency Program: granted to APN Partners who have demonstrated technical proficiency and proven customer success in specialized solution areas
+    - AWS Navigate Partner: train the Partners
 
 
