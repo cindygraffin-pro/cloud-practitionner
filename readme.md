@@ -883,6 +883,7 @@ There are two patterns of app communication:
 - asynchronous/event based (app to queue to app)
 
 **SQS:**
+- simple queue service
 - producers send messages to the queue, and once messages are stored in a queue, then they can be red by consumers who will be polling the queue, that means requesting messages from the queue
 - fully managed service (serverless), used to decouple app
 - scales from 1 message per sec to 10000s
@@ -898,3 +899,559 @@ There are two patterns of app communication:
 - kinesis Data Firehose: load streams into S3, Redshift, ElasticSearch
 - kinesis Data Analytics: perform real-time analytics on streams using SQL
 - kinesis Video Streams: monitor real-time video streams for analytics or ML
+
+**SNS:**
+- simple notification service, pub/sub messaging service
+- the "event publisher" only sends message to one SNS topic
+- as many "event subscribers" as we want to listen to the SNS topic notifications, each subscriber will get all the messages
+- subscribers can be SQS, lambda, kinesis data firehose, emails, sms & mobile notif, http(s) endpoints..
+
+**Amazon MQ:**
+- SQS and SNS are "cloud-native" services: proprietary protocols from AS
+- when migrating to the cloud, instead of re-engineering the traditional app to use SQS and SNS we can use Amazon MQ
+- managed message broker service for:
+  - RabbitMQ
+  - ActiveMQ
+- can run in multi-AZ with failover
+- has both queue feature (~SQS) and topic features (~SNS)
+
+## Cloud Monitoring
+
+**CloudWatch:**
+- provide metrics for every services in AWS
+- metric = variable to montior (CPU utilization, NetworkIn..), they have timestamps
+
+**CW Alarms:**
+- used to trigger notif for any metric
+- alarm actions:
+  - auto-scaling: increase/decrease EC2 instances
+  - ec2 actions: stop, terminate, reboot or recover
+  - SNS notif: send a notif into an SNS topic
+- can choose a period
+- alarm states: OK/INSUFFICIENT_DATA/ALARM
+
+**CW Logs**
+- collect from apps (Elastic Beanstalk), containers (ECS), function, dns queries (Route53)
+- CloudTrail based on filter
+- CW log agents: on EC2 machines or on-premises servers for have logs (verify IAM permissions)
+- real-time monitoring
+- adjustable log retention
+
+**EventBridge:**
+
+- formerly CW Events:
+  - schedule: cron jobs (scheduled scripts)
+  - event pattern: event rules to react to a service doing something (for ex IAM root user sign in event)
+- Default event Bus comes from AWS services, Partner event bus comes from AWS SaaS Partners, and Custom event bus comes from custom apps
+- schema registry: model event schema
+- we can archive events sent to an event bus, and replay them
+
+**CloudTrail:**
+- provides governance, compliance and audit for the AWS account
+- get an history of events. Audit API calls made within account by Console, SDK, CLI and AWS services
+- can put logs from CT to CW Logs or S3
+- a trail can be applied to all regions (default) or a single one
+- CT Insights automated analysis of CT Events
+
+**X-Ray:**
+- tracing requestts and visual analysis of our app
+- troubleshooting perf (bottlenecks)
+- understand dependencies ina microservice archi
+- pinpoint service issues
+- review request behavior
+- find errors and exceptions
+- look if we are meeting rime SLA (service-level agreement) -> are we replying on time to requests ?
+- where a am throttled
+- identify users that are impatced
+
+**Code-Guru:**
+- ML powered service for automated code reviews and app perf recommendations
+- Reviewer: automated code reviews for static code analysis (dev)
+- Profiler: visibilty/recommendations about app perf during runtime (prod), supports app running on AWS or on-premises
+- supports java and python
+
+**Service Health Dashboard:**
+- show all regions and all services health
+- RSS fee to subscribe to
+
+**Personal Health Dashboard:**
+- provides alerts and remediation guidance when AWS is experiencing events that may impact us
+
+## VPC & Networking
+
+**VPC:**
+- private network to deploy resources in (regional resource)
+- subnets allow to partition the network inside of our VPC (AZ resource)
+- a public subnet is a subnet that is accessible from the internet
+- a private subnet is a subnet not accessible from the internet
+- to define access to the internet and between subnets we use Route Tables
+
+**Internet Gateway & NAT Gateways:**
+- Internet Gateways helps our VPC instances to connect with the internet and public subnets have a route to the internet gateway
+- NAT Gateways (AWS managed, created in public subnet) & NAT Instances (self-manged) allow instances in private subnets to access the internet while remaining private
+- CIDR = range of IP 
+
+**Network ACL & Security Groups:**
+-  ACL is Access Control List: 
+  - firewall which controls traffic from and to subnet
+  - have ALLOW and DENY rules that only include IP addresses  
+  - attached at the subnet level
+  - stateless: return traffic must be allowed by rules
+- Security Groups:
+  - firewall that controls traffic to and from an ENI (Elastic Network Interface)/EC2 Instance
+  - only ALLOW rules that include IP addresses and other security groups
+  - stateful : return traffic is auto allowed
+
+**VPC Flow Logs:**
+- capture info about IP traffic going into our interfaces
+  - VPC Flow Logs
+  - Subnet Flow Logs
+  - Elastic Nextwork Interface Flow Logs
+- help to monitor & troubleshoot connectivity issues
+- captured network info from AWS managed interfaces like ELB, ElastiCache, RDS, Aurora...
+- logs data can go to S3/CW Logs
+
+**VPC Peering:**
+- Connect two VPC and make them behave as if they were in the same network
+- must not overlapping CIDC
+- peering connection is not transitive
+
+**VPC Endpoints:**
+- endpoints allow to connect to AWS Services using a private network instead of the public www network
+- better security and less latency
+- VPC Endpoint Gateway: S3 & DynamoDB
+- VPC Endpoint Interface: the rest (ENI)
+
+**PrivateLink:**
+- VPC Endpoint Service family
+- most secure & scalable way to expose a service to 1000s of VPC (private network)
+- does not require VPC peering, internet gateway, NAT, route tables..
+
+**VPN:**
+- Site to Site VPN:
+  - connect an on-premises VPN to AWS
+  - connection auto encrypted
+  - goes over the public internet
+  - on premises it must use a Customer Gateway (CGW)
+  - on AWS it must use a Virtual Private Gateway (VGW)
+- Direct Connect (DX)
+  - physical connection btw on-premises abd AWS
+  - private network
+
+**AWS Client VPN:**
+- connect from our computer using OpenVPN to our private network in AWS and on-premises
+- allow to connect to EC2 instances over a private IP
+
+**Transit Gateway:**
+- for having transitive peering between thousands of VPC and on-premises, hub-and-spoke (star) connection
+- works with Direct Connect (direct private connection to AWS) Gateway, VPN connections
+
+## Security & Compliance
+
+**Shared Responsability Model:**
+- AWS responsability - security **of** the Cloud:
+  - protecting infra (hardware, software, facilities and networking) that runs all the AWS services
+  - managed services like S3, DynamoDB..
+- Customer Responsibility - security **in** the Cloud
+  - For EC2 instance, management of the guest OS, firewall, network config, IAM
+  - encrypted app data
+- Shared controls:
+  - patch management, config management, awareness & training
+
+**DDoS Protection:**
+- Distributed Denial-of-Service:
+- AWS Shield Standard: 
+  - provides protection from attacks such as SYN/UDP Floods, Reflection attacks and other layer 3/4 attacks
+- AWS Shield Advanced: 
+  - 24/7 premium DDoS protection, with response team
+  - protect against more sophisticated attack 
+- AWS WAF: 
+  - filter specific requests based on rules
+  - protect from common web exploits (layer 7 -> HTTP)
+  - on ALB, API Gateway, CF
+  - define web ACL (rules based on IP addresses, HTTP headers, body and URI strings)
+  - protects from common attacks like SQL injection and Cross-Site Scripting (XSS)
+  - size constraints, geo-match (block countries)
+  - rate-based rules (to count occurences of events) - DDoS protection
+- CF and R53: availability protection, combned with AWS Shield, provides attack mitigation at the edge
+- Be ready to scale - AWS auto-scaling
+
+**Encryption:**
+- 2 types:
+  - at rest: data stored or archived on a device, for ex encrypted at rest on EFS/S
+  - in transit: encryption while data is being moved from one place to another (in motion) 
+- leverage encryption keys
+
+**KMS:**
+- Key Mangement Service
+- AWS manages the encryption keys for us
+- Encryption Opt-in: EBS volumes (encrypt volumes), S3 buckets (server-side encryption), etc..
+- Encryption Auto enabled:CT Logs, S3 Glacier, storage gateway
+
+**CloudHSM**:
+- AWS provisions encryption hardware but we manage keys ourselves
+- Dedicated hardware -> Hardware Security Module
+
+**Customer Masters Keys (CMK):**
+- Customer Managed CMK:
+  - create, manage and used by the customer, can enable or disable
+  - possibility of rotation policy
+  - can bring our own key
+- AWS managed CMK:
+  - created, managed and used on the customer's behalf by AWS
+  - used by AWS services
+- AWS owned CMK:
+  - collection of CMKs that an AWS service owns and manage to use in multiple accounts
+  - AWS can use those to protect resources in our account (but we can't view them)
+- CloudHSM Keys:
+  - keys generated from our own CloudHSM hardware device
+  - cryptographic operations are performed within the CloudHSM cluster
+
+**AWS Certificate Manager (ACM):**
+- let us easily provision, manage and deploy SSL/TLS certificates
+- used to provide in-flight encryption for websites (HTTPS)
+- supports public/private TLS certificates, auto renewal
+
+**Secrets Manager:**
+- for storing secrets
+- capability to force rotation of secrets every X days
+- automate generation of secrets (using lambda)
+- integration with RDS
+- encrypted by KMS
+
+**Artifact:**
+- portal that provides customers with on-demand access to AWS compliance doc and agreements
+- Artifact Reports 
+- Artifact Agreements
+
+
+**GuardDuty:**
+- intelligent threat discovery to protect AWS account
+- use ML algo, anomaly detection, 3rd party data (CT event logs, VPC flow logs, DNS logs, EKS Audit Logs)
+- can setup CW Event rules to be notified in case of findings that can target AWS lambda or SNS to do some actions
+- can protect against CryptoCurrency attacks (dedicated "finding" for it)
+
+**Inspector:**
+- automated security assessments, for EC2 (SSM agent) and Containers push to ECR
+- Reporting & integration with AWS Security Hub
+- sent findings to amazon event bridge
+- continuous scanning of the infra, only when needed
+- evaluates package vulnerabilities and network reachibility
+- a risk score is associated with all vulnerabilities for prioritization
+
+**Config:**
+- helps with auditing and recording compliance of our AWS resources
+- helps record config and changes over time
+- possibility of storing the config data into S3 (analyzed by Athena)
+- can receive alerts for any changes  (sns notif)
+- per region service but can be aggregated across regions and accounts
+
+**Macie:**
+- fully managed data security and data privacy service that uses ML and pattern matching to discover and protect your sensitive data in AWS
+- helps identify and alert to sensitive data such as personnaly identifiable (PII)
+
+**Security Hub:**
+- central security tool to manage security accross several AWS accounts and automate security checks
+- collect potential issus & findings
+- integrated dashboard showing current security and compliance status to quickly take actions
+- auto aggregate alerts in predefined or personal findings formats from varous AWS services & AWS partner tools (GuardDuty, Inspector, Macie, IAM Access Analyzer, Systems Manager, Firewall Manager, Partner Network Solutions)
+- must first enable AWS Config Service
+
+**Amazon Detective:**
+- analyzes, investigates and quickly identifies the root cause of security issus or suspicious activities (ML and graphs)
+- auto collects ans processes events from VPC Flow Logs, CTrail, GuardDuty and create a unified view
+- produces visualizations with detail sand context to get the root cause
+
+**Config:**
+- report suspected AWS resources used for abusive or illegal purpose
+- abusive & prohibited behaviors: spam, port scanning, DoS or DDoS attacks, intrusion attempts, hosting objectionable or copyrighted content, distributing malware
+
+**Root User Privileges:**
+- Change account settings
+- view certain tax invoices
+- close AWS account
+- restore IAM user permissions
+- change or cancel AWS support plan
+- register as a seller in the Reserved Instance Marketplace
+- config an S3 bucket to enable MFA
+- edit or delete an S3 policy that includes an invalid VPC ID or enpoint ID
+- sign up for GovCloud
+
+## Machine Learning
+
+**Rekognition:**
+- Find objects, people, text, scenes and videos using ML
+- Facial analysis and search to do user verification, people counting
+- create a db of "familiar faces" or compare against celebrities
+
+**Transcribe:**
+- auto convert speech into text
+- used a deep learning process called automatic speech recognition (ASR) to convert speech to text quickly and accurately
+- can auto remove any PII using Redaction
+- supports Automatic Language Identification 
+
+**Polly:**
+- Turn text into speech using deep learning
+- allow to create app that talk
+
+**Translate:**
+- natural and accurate lgg translation
+- allow to localize content such as websites and app for international users, and to easily translate large volumes of text efficiency
+
+**Lex:**
+- same techno that powers Alexa
+- automatic pseech recognition (ASR) to convert speech to text (callers)
+- natural lgg understanding to recognize the intent of text
+- helps build chatbots, call center bots
+
+**Connect:**
+- receive calls, create contact flows, cloud-based virtual contact center
+- can integrate with other Customer RelationShip (CRM) systems or AWS services
+
+**Comprehend:**
+- For Natural Language Processing (NLP)
+- fully managed serverless service
+- uses ML to find insights and relationships in text
+
+**SageMaker:**
+- fully managed service for dev/data scientists to build ML models
+- helps with labelling, building, training, and tuning
+
+**Forecast:**
+- fully managed service that uses ML to deliver highly accurate forecasts (for ex predict future sales of a raincoat)
+- reduce forecasting time from months to hours
+
+**Kendra:**
+- fully managed document search service powered by ML
+- extract answers from within a document (text,pdf...)
+- natural lgg capabilities
+- learn from user interactions/feedback to promote preferred results (incremental learning)
+- ability to manually fine-tune search results
+
+**Personalize:**
+- fully managed ML service to build apps with real-time personalized recommendations
+- same techno used by amazon.com
+- can expose a customized personalized API
+
+**Textract:**
+- auto extracts text, handwriting, and data from any scanned documents using AI and ML
+- extracts data from forms and tables
+- read and process any type of documents
+
+## Account Management, Billing & Support
+
+**Organizations:**
+- global service
+- allows to manage multiple AWS accounts
+- main account is *master* account 
+- cost benefits:
+  - consolidated Biling across all accounts - single payment method
+  - pricing benefits from aggregated usage (volume discount for EC2, S3..)
+  - pooling of reserved EC2 instances 
+- api is available to automate AWS accoiunt creation
+- restrict account privileges using Service Control Policies (SCP)
+
+**Multi-Account Strategies:**
+- create accounts per department, cost center, dev/Test/prod, based on regulatory restrictions (using SCP), for better resource isolation (ex VPC), to have separate per-account service limits, isolated account for logging
+- multi account vs one account multi VPC
+- use tagging standard for billing purposes
+- enable CT on all accounts, send logs to central S3 account
+- send CW logs to center logging account
+
+**Service Control Policies (SCP):**
+- Whitelist or blacklist IAM actions
+- appplied at the OU or account level but not to the master account
+- SCP is applied to all the Users and Roles of the Acccount, including Root, but does not affect service-linked roles
+- SCP must have an explicit Allow (does not allow everything by default)
+- used for example to restrict access to certain services (can't use EMR), enforce PCI complianceby explicitely disabling services
+- inherit of allow/deny
+
+**Org Consolidated Biling:**
+- Combined usage accross all AWS accounts in the AWS Org to share the volume pricing, reserved instances and savings plans discounts
+- One bill for all AWS accounts in AWS Org
+- managment account can turn off reserved instances sharing for any account in the AWS Org including itself
+
+**Control Tower:**
+- easy wat to set up and govern a secure and compliant multi-account AWS env based on best practices
+- automate the setup of env
+- auto ongoing policy management using guardrails
+- detect policy violations and remediate them
+- monitor compliance through an interactive dashboard
+- runs on top of AWS org (auto sets up AWS Org to organize accounts and implement SCPs)
+
+**Pricing Models:**
+- Pay as you go: pay for what you use, remain agile, meet scale demands
+- Save when you reserve: minimize risks, predictably manage budgets, comply with long-terms requirements
+- Pay less by using more: volume-based discounts
+- Pay less as AWS grows
+- use private IP instead of Public Ip for good savings and better network perf
+- use same AZ for max savings
+
+**Savings Plan:**
+- commit a certain $ amount per hour for 1 or 3 years
+- easiest way to setup long-term commitments on AWS
+- EC2 Savings Plan: commit to usage of individual instance in a region (eg C5 or M5)
+- Compute Savings Plan: regardless of family, region, size, os, tenancy, comptue options
+- ML savings Plan: sagemaker...
+- setup from AWS Cost Explorer console
+
+**Compute Optimizer:**
+- Reduce costs and improve perf by recommending optimal AWS resources for workloads
+- Help choose optimal config and right-size workloads (over/under provisioned)
+- uses ML to analyze resources config and their utilization CW metrics
+- support EC2 instances, ASG, EBS, Lambdas 
+- recommendations can be exported to S3
+
+**Billing & Costing Tools:**
+- Estimating costs in the cloud, for our archi solution: Pricing Calculator
+- Tracking costs in the cloud: 
+  - Billing Dashboard (with Free Tier Dashboard usage)
+  - Cost Allocation Tags
+  - Cost and Usage Reports
+  - Cost Explorer
+- Monitoring against costs plans: Biling Alarms & Budgets
+
+**Cost Allocation Tags:**
+- track AWS costs on a detailed level 
+- AWS generated tags that automatically applied to the resource we create and start with rpefix *aws:* for ex *aws:createdBy*
+- User-defined tags: defined by user and start with a prefix *user:* for ex *user:Stack*
+
+**Tagging:**
+- tags are used for organizing resources: EC2, RDS, VPC.. 
+- Resources created by CF are all tagged the same way
+- common tags are Name, Env, Team
+- tags can be used to create Resource Groups (mange the tags using Tag Editor)
+
+**Cost & Usage Reports:**
+- dive deeper into aws costs and usage, contains the most comprehensive set of AWS cost and usage data available, including additional metadata about AWS services, pricing, and reservations
+- lists AWS usage for each service category used by an account and its IAM users in hourly or daily line items, as well as any tags thaht that we have activated for cost allocation purposes
+- can be integrated and analyzed with Athena, Redshift or QuickSight
+
+**Cost Explorer:**
+- Visualize, understand, and manage AWS costs and usage over time
+- create custom reports that analyze cost and uage data
+- analyze data at high level: total costs and usage accross all accounts OR monthly, hourly, resource level granularity
+- choose an optimal Savings Plan
+- Forecast usage up to 12 months based on previous usage
+
+**Billing Alarms in CW:**
+- billing data metric is stored in CW us-east-1 and is agreggated for overall worldwide AWS costs
+- actual costs, not for projected
+- simple alarms
+
+**Budgets:**
+- Create budget and send alarms when costs exceeds the budget
+- 3 types:
+  - Usage
+  - Cost
+  - Reservation
+- For reserved instances (RI): track utilization, supports EC2, elastiCache, RDS, Redshift
+- up to 5 SNS notif per budget
+
+**Trusted Advisor:**
+- high level AWS account assessment
+- analyze our account and provides recommendation on 5 categories:
+  - cost optimization
+  - performance
+  - security
+  - fault tolerance
+  - service limits
+
+**TA - Support Plans:**
+- 7 CORE checks (basic & dev support plan): S3 bucket permissions, security groups specific ports unrestricted, IAM Use (one IAM user mini), MFA on root account, EBS Public snapshots, RDS public snapshots, service limits
+- FULL checks (business & ent support plan): full checks on the 5 categories, ability to set CW alarms when reaching limits, promgrammatic access using AWS Support API
+
+**AWS Support Plans Pricing:**
+- Basic support: 
+  - Customer Service & Communities - 24x7 access to customer service, doc, whitepapers and support forums
+  - AWS Trusted Advisor: 7 core checks and guidance to provision resources following best practices to increase perf and improve security
+  - AWS Personal Health Dashboard: peersonalized view of the health of AWS services, and alerts when our resources are impacted
+- Developer support plan:
+  - business hours email access to Cloud Support Associates (emailing AWS through opening support tickets in the console)
+  - unlimited cases/ 1 primary contact
+  - Case severity/response time (general guidance, system impaired)
+- Business Support Plan (24/7)
+  - used for prod workloads
+  - Trusted advisor full set of checks + API access
+  - 24/7 phone, email and chat access to Cloud Support Engineers
+  - unlimited cases/contacts
+  - access to Infrastructure Event Management for add fee
+  - case severity/response (+ prod system impaired/prod system down)
+- Enterprise On-Ramp Support plan (24/7):
+  - used for pord/business critical workloads
+  - access to a pool of Technical Account Managers (TAM)
+  - Concierge Support Team (for billing and account best practices)
+  - Infra Event Management, Well-Architected & Operations Reviews
+  - case severity/response (+ business-critical system down <30 min)
+- Enterprise Support Plan (24/7):
+  - mission critical workloads
+  - access to a designated Technical Account Manager (TAM
+  - case severity/response (+ business-critical system down <15 min)
+  
+## Advanced Identity
+
+**Security Token Service (STS):**
+- enables to create temporary, limited-rpivileges credentials to access our AWS resources
+- short-term credentials: config of expiration period
+- uses cases: identity federation (for external systems), IAM Roles for cross/same account access, IAM Roles for EC2
+
+**Cognito:**
+- way to provide identity for web and mob app users (potentially millions) instead of creating them an IAM user, we create a user in Cognito
+- own db of users with integrated login in mobile/web app
+
+**Microsoft Active Directory (AD):**
+- found on ay Windows Server with AD Domain services
+- db of objects: user accounts, computers, printers, file shares, security groups
+- centralized security management, create account and assign permissions
+
+**AWS Directory Services:**
+- AWS Managed Microsoft AD: 
+  - create our own AD in AWS, manage users locally, supports MFA
+  - establish "trust" connections with our on-premises AD
+- AD Connector:
+  - directory Gateway (proxy) to redirect to on-premisesAD, supports MFA
+  - users are managed on the on-premises AD
+- Simple AD
+  - AD compatible managed on AWS
+  - cannot be joined with on-premises AD
+
+**IAM Identity Center:**
+- successor to AWS Single Sign-On
+- one login (signle sign-on) for all:
+  - AWS accounts in AWS Organizations
+  - Business cloud app (Salesforce, Box, Microsoft 365)
+  - SAML2.0-enabled app
+  - EC2 Windows Instances
+- identity providers (where data is stored):
+  - built-in identity store in IAM Identity Center
+  - 3rd party: AD, OneLogin, Okta..
+
+## Others services
+
+**WorkSpaces:**
+- managed desktop as a service (DaaS) solution to easily provision Windows or Linux desktops
+- great to eliminate management of on-premises VDI (virtual desktop infrastructure)
+- fast and quickly scalable to thousand of users
+- secured data, integrated with KMS
+- pay as you go service with monthly and hourly rates
+- best practice is to deploy workspaces as close as users (as many workspaces regions as center locations to minimize latency)
+
+**AppStream 2.0:**
+
+**Sumerian:**
+
+**IoT Core:**
+
+**WorkSpaces:**
+
+**WorkSpaces:**
+
+**WorkSpaces:**
+
+**WorkSpaces:**
+
+**WorkSpaces:**
+
+
+
+
