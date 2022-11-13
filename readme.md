@@ -1704,4 +1704,29 @@ Free tool to review our archi against the 6 pillars Well-Architected Framework a
     - AWS Competency Program: granted to APN Partners who have demonstrated technical proficiency and proven customer success in specialized solution areas
     - AWS Navigate Partner: train the Partners
 
+**AWS Knowledge Center:**
+Contains the most frequent & common questions/requests.
 
+**AWS IQ:** 
+- Quickly find a professional help for our AWS projects 
+- Engage and pay AWS Certified 3rd party experts for on-demand project work
+- video-conferencing, contract management, secure collab, integrated billing
+- for customers: 
+  - submit request: describe project
+  - review responses: connect to experts
+  - select expert: based on rates, experience
+  - work securely: give experts appropriate access to AWS account
+  - pay per milestone: charges added into AWS Bill
+- for experts:
+  - create profile: photo, bio, certs...
+  - connect with customers
+  - start a proposal: work desc, price, milestones
+  - work securely: get appropriate access
+  - get paid: after milestones are met
+
+**AWS re:Post:**
+- community forum
+- AWS managed Q&A service offering crowd-sourced, expert reviewed answers to our technical questions about AWS that replaces the original AWS Forums
+- community members can earn reputation points to build up their community expert status by providing accepted answers and reviewing answers from other users
+- questions from AWS premium support customers that do not receive a response from the community are passed on to AWS Support engineers
+- not for questions time-sensitive or involve any proprietary info
