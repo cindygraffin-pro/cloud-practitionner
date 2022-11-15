@@ -114,8 +114,8 @@ Online policy is a policy attach to only one user. For users in group, they inhe
 -> if pw is stolen or hacked, account is not compromised
 - different options: 
   - virtual MFA device like Google Authenticator (one phone) or Authy (multi device), they support multiple tokens on a single device
-  - Universal 2nd factor (U2F) Security Key: physical device like YubiKey (3rd party), support multiple root and IAM users 
-  - Hardware Key Fob MFA Device 
+  - Universal 2nd factor (U2F) Security Key: physical device like YubiKey (3rd party), support multiple root and IAM users, plug into USB port, open auth standard hosted by the FIDO alliance
+  - Hardware Key Fob MFA Device: generates a six-digit numeric code based upon a time-synchornized one-time pw algo
   - Hardware Key Fob MFA Device for AWS GovCloud (US)
 
 **IAM Roles for Services:**
@@ -235,7 +235,7 @@ Common pattern, for ex **m5.2xlarge**:
   - Reserved Instances: long workloads, reserved instance's scope (regional or zonal)
   - Convertible Reserved Instances: long workloads with flexible instances, allow to change instance type, family, OS, scope and tenancy
 - Saving Plans (1 & 3 years): commitment to an amount of usage, long workloads, specific instance family & AWS region but flexible with size, OS and Tenancy (Host, Dedicated or Default)
-- Spot Instances: short workloads, cheap, can lose instance
+- Spot Instances: short workloads, cheap, can lose instance, enable to request unused instances, batch jobs
 - Dedicated Hosts: book an entire physical server, controle instance placement. Allows to address compliance requirements and use existing server-bound software licences (on demand or reserved)
 - Dedicated Instances: no other customers will share our hardware but others instances in same account use it
 - Capacity reservations: reserve capacity in a specific AZ for any duration
@@ -258,6 +258,7 @@ Common pattern, for ex **m5.2xlarge**:
 **EBS Volume:**
 
 - Elastic Block Store Volume: network drive we can attach to our instances while they run, or also detach and attach to another
+- block level storage
 - allows instances to persist data, even after their termination
 - can only be mounted to one instance at a time (at the CCP level) (but not for EBS Multi-Attach feature)
 - bound to a specific availabilty zone, if we want to move in another AZ we need to snapshot it
@@ -304,14 +305,15 @@ Amazon Machine Image: Ready to use EC2 instances with our customizations
 Recipe = Document that defines how the source image is going to be customized.
 
 **EC2 Instance Store:**
-- EBS volumes are network drives with "limited" performance
+- EBS volumes are network drives with "limited" performance, temporary block-level storage
 - If we need a high-perf hardware disk, we use EC2 instance store (name of the hard drive attached to the physical server)
 - better I/O perf
 - lose their storage if they're stopped (ephemeral) or if hardware fails
-- good for buffer, cache, temp content
+- good for buffer, cache, temp content (informations that change frequently)
 
 **EFS:**
 - Elastic File System
+- scale on demand to petabytes
 - Third type of storage we can attach onto an EC2 instance
 - managed NFS (network file system) that can be mounted on hundreds of EC2 instances
 - works with Linux EC2 instances in multi AZ
@@ -475,6 +477,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Durability (same for all classes) and Availability (varies on storage classes)  
 
 - General Purpose:
+  - 99,999999999% durability
   - Used for frequently accessed data
   - Big Data Analytics, mobile & gaming app, etc..
 - Infrequent Access (IA):
@@ -485,7 +488,7 @@ Not related to scalability, new IT resources are only a click away, which means 
   - low-cost object storage meant for archiving/backup
   - Glacier Instant Retrieval: millisecond retrieval, min storage duration 90 days
   - Glacier Flexible Retrieval:  expedited (1 to 5 minutes), Standard (3 to 5 hours), Buk (5 to 12 hours), min storage duration 90 days
-  - Glacier Deep Archive: long term storage, satandard (12 hours), Bulk (48h), min storage 180 days
+  - Glacier Deep Archive: long term storage, satandard (12 hours), Bulk (48h), min storage 180 days (data accessed once or twice a year, backups & recovery)
 - Intelligent Tiering: small monthly monitoring and auto-tiering fee, moves objects automatically between access tiers based on usage:
   - frequent access tier: default tier
   - infrequent access tier: obj not accessed for 30 days
@@ -539,12 +542,13 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **AWS OpsHub:**
 - to use snow family we need a CLI
-- software to install on copputer/laptop to manage snow family device
+- software to install on computer/laptop to manage snow family device
 
 **AWS Storage Gateway:**
 - Bridge between on-premise data anc cloud data in S3
 - Hybrid storage service to allow on-premises to seamlessly use the AWS Cloud
 - Differents Types: File Gateway, Volume Gateway, Tape Gateway
+- cannot be used for dara archival
 
 
 ## Databases & Analytics
@@ -712,6 +716,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **Batch:**
 Jobs that can run without end user interaction, or can be scheduled to run as resources permit, are called batch jobs. Batch processing is for those frequently used programs that can be executed with minimal human interaction. A program that reads a large file and generates a report, for example, is considered to be a batch job.
+- enables developers, scientists, and engineers to easily and efficiently run hundreds of thousands of batch computing jobs on AWS
 - fully managed batch processing at any scale
 - run 100000s of computing 
 - a "batch" job is a job with a start and an end (opposed to continuous)
@@ -725,6 +730,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - relied on EC2 (managed service)
 
 **Lightsail:**
+- easiest way to launch and manage a virtual private server with AWS
 - virtual servers, storage, db and networking
 - simpler alternative to using EC2, RDS, ELB, EBS, etc..
 - setup notif and monitoring 
@@ -748,6 +754,8 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **Elastic Beanstalk:**
 - Web App 3-tier: ELB -> EC2/ASG -> RDS/ElastiCache
+- easy to use service for deploying and scaling web apps and services (it provide server)
+- upload code, then Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring
 - developer centric view of deploying an app on AWS
 - it uses EC2, ASG, ELB, RDS, etc..
 - full control over the config
@@ -765,7 +773,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **CodeDeploy:**
 - deploy our app automatically
-- work with EC2 instances and on-premises servers -> hybrid service
+- work with EC2 instances, Fargate, Lambda and on-premises servers -> hybrid service
 - servers/instances must be provisioned and configured ahead of time with the CodeDeploy Agent
 
 **CodeCommit:**
@@ -796,7 +804,12 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - allow code collab in real-time
 
 **Systems Manager (SSM):**
-- helps manage E2 and on-premises systems at scale -> hybrid service
+- gives visibility and control of your infrastructure on AWS
+- operational insights of resources to quickly identify any issues that might impact applications using those resources
+- provides a unified user interface so you can view operational data from multiple AWS services and allows you to automate operational tasks across your AWS resources
+- allow to group resources
+- helps manage and operate resources at scale
+- helps manage EC2 and on-premises systems at scale -> hybrid service
 - get operational insights about the state of the infra
 - patching automation run commands accross an entire fleet of servers, store parameter config with SSM Parameter Store
 - for Windows and Linux OS
@@ -809,11 +822,13 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - send session log data to S3 or CW Logs
 
 **OpsWorks:**
-- Chef & Puppet help config server auto or perform repetitive actions (not created by AWS)
+- configuration management service that provides managed instances of Chef and Puppet
+- Chef & Puppet help config server auto, deploy, manage or perform repetitive actions (not created by AWS)
 - work great with EC2 & on-premises VM
 - OpsWork allow to managed Chef & Puppet (alternative to SSM)
 - provision std AWS resources (db, elb, ebs volumes..)
 - different OpsWork Layers
+- can't be used for running commandes or managing patches on service, neither for provisioning AWS infra
 
 ## AWS Global Archi
 
@@ -905,6 +920,7 @@ There are two patterns of app communication:
 - the "event publisher" only sends message to one SNS topic
 - as many "event subscribers" as we want to listen to the SNS topic notifications, each subscriber will get all the messages
 - subscribers can be SQS, lambda, kinesis data firehose, emails, sms & mobile notif, http(s) endpoints..
+- enables you to decouple microservices, distributed systems, and serverless applications
 
 **Amazon MQ:**
 - SQS and SNS are "cloud-native" services: proprietary protocols from AS
@@ -947,7 +963,7 @@ There are two patterns of app communication:
 - we can archive events sent to an event bus, and replay them
 
 **CloudTrail:**
-- provides governance, compliance and audit for the AWS account
+- provides governance, compliance and operational/risk audit for the AWS account
 - get an history of events. Audit API calls made within account by Console, SDK, CLI and AWS services
 - can put logs from CT to CW Logs or S3
 - a trail can be applied to all regions (default) or a single one
@@ -1017,7 +1033,7 @@ There are two patterns of app communication:
 - peering connection is not transitive
 
 **VPC Endpoints:**
-- endpoints allow to connect to AWS Services using a private network instead of the public www network
+- endpoints allow to connect VPC to to AWS Services using a private network instead of the public www network
 - better security and less latency
 - VPC Endpoint Gateway: S3 & DynamoDB
 - VPC Endpoint Interface: the rest (ENI)
@@ -1029,14 +1045,15 @@ There are two patterns of app communication:
 
 **VPN:**
 - Site to Site VPN:
-  - connect an on-premises VPN to AWS
+  - secure connection between on-premises VPN to AWS cloud resources 
   - connection auto encrypted
   - goes over the public internet
   - on premises it must use a Customer Gateway (CGW)
   - on AWS it must use a Virtual Private Gateway (VGW)
 - Direct Connect (DX)
-  - physical connection btw on-premises abd AWS
+  - physical connection btw on-premises and AWS
   - private network
+  - takes a month to establish the connection
 
 **AWS Client VPN:**
 - connect from our computer using OpenVPN to our private network in AWS and on-premises
@@ -1118,6 +1135,7 @@ There are two patterns of app communication:
 - automate generation of secrets (using lambda)
 - integration with RDS
 - encrypted by KMS
+- rotate, manage and retreive db credentials, API keys, and others
 
 **Artifact:**
 - portal that provides customers with on-demand access to AWS compliance doc and agreements
@@ -1134,12 +1152,13 @@ There are two patterns of app communication:
 **Inspector:**
 - automated security assessments, for EC2 (SSM agent) and Containers push to ECR
 - Reporting & integration with AWS Security Hub
-- sent findings to amazon event bridge
+- send findings to amazon event bridge
 - continuous scanning of the infra, only when needed
 - evaluates package vulnerabilities and network reachibility
 - a risk score is associated with all vulnerabilities for prioritization
 
 **Config:**
+- enables you to assess, audit, and evaluate the configurations of your AWS resources
 - helps with auditing and recording compliance of our AWS resources
 - helps record config and changes over time
 - possibility of storing the config data into S3 (analyzed by Athena)
@@ -1215,7 +1234,7 @@ There are two patterns of app communication:
 
 **SageMaker:**
 - fully managed service for dev/data scientists to build ML models
-- helps with labelling, building, training, and tuning
+- helps with labelling, building, training, and tuning, deploy quickly
 
 **Forecast:**
 - fully managed service that uses ML to deliver highly accurate forecasts (for ex predict future sales of a raincoat)
@@ -1242,14 +1261,14 @@ There are two patterns of app communication:
 
 **Organizations:**
 - global service
-- allows to manage multiple AWS accounts
+- allows to manage multiple AWS accounts and automate the account creation processus
 - main account is *master* account 
 - cost benefits:
   - consolidated Biling across all accounts - single payment method
   - pricing benefits from aggregated usage (volume discount for EC2, S3..)
   - pooling of reserved EC2 instances 
-- api is available to automate AWS accoiunt creation
-- restrict account privileges using Service Control Policies (SCP)
+- API is available to automate AWS account creation
+- restrict account privileges using Service Control Policies (SCP), govern access to aws services, resources and regions
 
 **Multi-Account Strategies:**
 - create accounts per department, cost center, dev/Test/prod, based on regulatory restrictions (using SCP), for better resource isolation (ex VPC), to have separate per-account service limits, isolated account for logging
@@ -1260,10 +1279,10 @@ There are two patterns of app communication:
 
 **Service Control Policies (SCP):**
 - Whitelist or blacklist IAM actions
-- appplied at the OU or account level but not to the master account
+- appplied at the Organizational Unit or account level but not to the master account
 - SCP is applied to all the Users and Roles of the Acccount, including Root, but does not affect service-linked roles
 - SCP must have an explicit Allow (does not allow everything by default)
-- used for example to restrict access to certain services (can't use EMR), enforce PCI complianceby explicitely disabling services
+- used for example to restrict access to certain services (can't use EMR), enforce PCI compliance by explicitely disabling services
 - inherit of allow/deny
 
 **Org Consolidated Biling:**
@@ -1322,9 +1341,9 @@ There are two patterns of app communication:
 - common tags are Name, Env, Team
 - tags can be used to create Resource Groups (mange the tags using Tag Editor)
 
-**Cost & Usage Reports:**
+**Cost & Usage Reports (CUR):**
 - dive deeper into aws costs and usage, contains the most comprehensive set of AWS cost and usage data available, including additional metadata about AWS services, pricing, and reservations
-- lists AWS usage for each service category used by an account and its IAM users in hourly or daily line items, as well as any tags thaht that we have activated for cost allocation purposes
+- lists AWS usage for each service category used by an account and its IAM users in hourly or daily line items, as well as any tags that that we have activated for cost allocation purposes
 - can be integrated and analyzed with Athena, Redshift or QuickSight
 
 **Cost Explorer:**
@@ -1356,6 +1375,7 @@ There are two patterns of app communication:
   - security
   - fault tolerance
   - service limits
+- for ex, warns when volumes (EBS) are unused
 
 **TA - Support Plans:**
 - 7 CORE checks (basic & dev support plan): S3 bucket permissions, security groups specific ports unrestricted, IAM Use (one IAM user mini), MFA on root account, EBS Public snapshots, RDS public snapshots, service limits
@@ -1417,7 +1437,8 @@ There are two patterns of app communication:
 
 **IAM Identity Center:**
 - successor to AWS Single Sign-On
-- one login (signle sign-on) for all:
+- centrally manage access to multiple AWS accounts and business applications and provide users with single sign-on access to all their assigned accounts and applications from one place
+- one login (single sign-on) for all:
   - AWS accounts in AWS Organizations
   - Business cloud app (Salesforce, Box, Microsoft 365)
   - SAML2.0-enabled app
@@ -1613,13 +1634,15 @@ There are 6 pillars in the Well-Architected Tool:
 - Design principles: 
   - test recovery procedures
   - auto recover from failure
-  - scale horizontally to increase aggregare system availability
+  - scale horizontally to increase aggregate system availability
   - stop guessing capacity
   - manage change in automation
 - Services:
   - foundations: IAM, VPC, Service Limits (= service Quotas), Trusted Advisor
   - change management: Auto Scalling, CW, CT, Config
   - Failure management: Backups, CF, S3, S3 Glacier, Route 53
+
+**Service Quotes (= Service Limits):** Service Quotas enables you to view and manage your quotas for AWS services from a central location. Quotas, also referred to as limits in AWS, are the maximum values for the resources, actions, and items in your AWS account. Each AWS service defines its quotas and establishes default values for those quotas.
 
 **4. Performance Efficiency**
 - Includes the ability to use computing resources efficiently to meet system requirements and to maintain that efficiency as demand changes and technologies evolve
