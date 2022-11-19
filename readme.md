@@ -35,7 +35,7 @@ Switch = takes a packet and send it to the correct server/client on the network
 - Hybrid Cloud: keep some servers on premises and extend some capabilities to the Cloud, control over sensitive assets
 
 **Six advantages:**
-- Trade capital expense (CAPEX) for operational expense (OPEX): pay on demand, reduce total cost of ownership (TCO) & Operational Expense (OPEX)
+- Trade capital expense (CAPEX) for operational expense (OPEX)/variable expense: pay on demand, reduce total cost of ownership (TCO) & Operational Expense (OPEX)
 - benefit from massive economies of scale
 - stop guessing capacity
 - increase speed and agility
@@ -56,7 +56,7 @@ Switch = takes a packet and send it to the correct server/client on the network
 **AWS Global Infra:**
 - AWS Regions: all around the world (eu-west-3 for ex) -> a region is a cluster of data centers, most services are region-scoped  
 *How to choose an AWS Region ?*
-  - Compliance with data governance and legal requirements: data never leaves a regio without explicit permission
+  - Compliance with data governance and legal requirements: data never leaves a region without explicit permission
   - Proximity to customers: reduced latency
   - Available services within a Region
   - Pricing: varies region to region
@@ -308,7 +308,7 @@ Recipe = Document that defines how the source image is going to be customized.
 - EBS volumes are network drives with "limited" performance, temporary block-level storage
 - If we need a high-perf hardware disk, we use EC2 instance store (name of the hard drive attached to the physical server)
 - better I/O perf
-- lose their storage if they're stopped (ephemeral) or if hardware fails
+- lose their storage if they're stopped (instance store volumes ephemeral) or if hardware fails
 - good for buffer, cache, temp content (informations that change frequently)
 
 **EFS:**
@@ -316,8 +316,8 @@ Recipe = Document that defines how the source image is going to be customized.
 - scale on demand to petabytes
 - Third type of storage we can attach onto an EC2 instance
 - managed NFS (network file system) that can be mounted on hundreds of EC2 instances
-- works with Linux EC2 instances in multi AZ
-- highly available, scalable, expensive, pay per use, no cpacity planning
+- works with Linux EC2 instances in multi AZ (can be mounted on instances accross multiple AZ)
+- highly available, scalable, expensive, pay per use, no capacity planning
 - all instances can mount the same EFS drive, using an EFS Mount Target and they will all see the same files
 
 *EFS Infrequent Access (EFS-IA):*
@@ -483,9 +483,10 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Infrequent Access (IA):
   - less frequently accessed but requires rapid access when needed
   - disaster recovery, backups (standard infrequent access: S3 Standard-IA)
-  - high durability in a single AZ, data lost when AZ is destroyed (S3 One Zone-IA), use for storing secondary backup copies 
+  - high durability in a single AZ, data lost when AZ is destroyed (S3 One-Zone IA), use for storing secondary backup copies 
 - Glacier: 
   - low-cost object storage meant for archiving/backup
+  - auto data encryption (AES-256)
   - Glacier Instant Retrieval: millisecond retrieval, min storage duration 90 days
   - Glacier Flexible Retrieval:  expedited (1 to 5 minutes), Standard (3 to 5 hours), Buk (5 to 12 hours), min storage duration 90 days
   - Glacier Deep Archive: long term storage, satandard (12 hours), Bulk (48h), min storage 180 days (data accessed once or twice a year, backups & recovery)
@@ -545,10 +546,11 @@ Not related to scalability, new IT resources are only a click away, which means 
 - software to install on computer/laptop to manage snow family device
 
 **AWS Storage Gateway:**
-- Bridge between on-premise data anc cloud data in S3
+- Bridge between on-premise data and cloud data in S3
 - Hybrid storage service to allow on-premises to seamlessly use the AWS Cloud
 - Differents Types: File Gateway, Volume Gateway, Tape Gateway
 - cannot be used for dara archival
+- encryption auto enabled (using SSL)
 
 
 ## Databases & Analytics
@@ -559,9 +561,11 @@ Not related to scalability, new IT resources are only a click away, which means 
 - managed by AWS: automated provisioning, OS patching, continuous backups and restore to specific timestamp, multi AZ setup for DR (disaster recovery), scaling
 - can't SSH into
 - Postgres, MySQL, Aurora(AWS Proprietary db)
+- better perf than a customer-managed db instance
 
 **Amazon Aurora:**
 - support postgreSQL and MySQL
+- fully managed
 - AWS cloud optimized, perf improvement
 - storage automatically grow in increments of 10GB, up to 64TB
 
@@ -610,7 +614,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - load data once every hour
 - 10x better perf than other data warehouse, scale to PBs of data
 - columnar storage of data
-- massively parallel query execution (MPP), higly aailable
+- massively parallel query execution (MPP), highly aailable
 - pay as you go
 - sql interface for performing the queries 
 - BI (Business Intelligence) tools such as AWS Quicksight or Tableau integrated with it
@@ -619,7 +623,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Elastic MapReduce
 - helps creating Hadoop clusters (Big Data) to analyze and process vast amount of data
 - clusters can be made of hundreds of EC2 instances
-- takes care of provisionning and configuring all those EC2 instances so that they work together and can analyze data from a bid data perspective
+- takes care of provisionning and configuring all those EC2 instances so that they work together and can analyze data from a big data perspective
 - auto-scaling and integrated with Spot Instances
 
 **Athena:**
@@ -644,17 +648,17 @@ Not related to scalability, new IT resources are only a click away, which means 
 - build and run app working with highly connected datasets - optimized for complex and hard queries
 - can store billions of relations and query the graph ms latency
 
-**QLBD:**
+**QLDB:**
 - Quantum Ledger Database
 - A ledger is a book recording financial transactions
 - fully managed db, serverless, high available, replicas accros 3 AZ
 - review history of all the changes made to app data over time
 - immutable system: no entry can be removed or modified, cryptographically verifiable (block hash)
-- better perf that common ledger blockchain framework, manipulate data using SQL
+- better perf than common ledger blockchain framework, manipulate data using SQL
 - no decentralization concept, just a central db owned by amazon, in accordance with financial regulation rules
 
 **Managed Blockchain:**
-- Blockchain makes it possible to build app where multiple parties can execute transactions without the neer for a trusted, central authority
+- Blockchain makes it possible to build app where multiple parties can execute transactions without the need for a trusted, central authority
 - managed service to:
   - join public blockchain networks
   - create our own scalable private network
@@ -681,7 +685,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - software development platform to deploy apps
 - apps are packaged in containers that can be run on any OS
 - scale containers up and down very quickly
-- on AWS, images can be stored in ECR (Elastic Container Registry), a private Docker registry that can be runned by ECS or Fargate
+- on AWS, images can be stored in ECR (Elastic Container Registry), a private Docker registry that can be runned by ECS or Fargate (it store, manage and deploy)
 
 **ECS:**
 - Elastic Container Service
@@ -700,6 +704,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **Lambda:**
 - FaaS: Function as a Service
+- Regional scope
 - virtual functions
 - limited by time - short executions (up to 15 minutes)
 - limited temporary disk space
@@ -840,7 +845,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **Route 53:**
 - managed DNS
-- DSN is a collection of rules and records which helps clients understand how to reach a server through URLs
+- DNS is a collection of rules and records which helps clients understand how to reach a server through URLs
 - IPv4 = A record / IPv6 = quadruple AAAA record / CNAME = hostname to hostname / hostname to AWS = Alias
 - Policies:
   - Simple Routing Policy: no health checks (web browser to route 53)
@@ -854,7 +859,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - improves read perf by caching content at different edge locations, and content is served at the edge
 - 216 points of presence (edge locations)
 - great for static content that must be available everywhere
-- DDoS protection, integration with Shield and AWS web application firewell
+- DDoS protection, integration with Shield and AWS web application firawell
 - cache from:
   - S3 bucket (enhanced security with CF Origin Access Identity OAI, CF can be used as an ingress)
   - Custom Origin (HTTP): ALB, EC2 instance, S3 website, or any HTTP backend
@@ -866,7 +871,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 **AWS Global Accelerator:**
 - improve global app availability and perf using the AWS global network -> optimize the route to the app (60% improvement)
 - 2 Anycast Ip are created and the traffic is sent through edge locations
-- integrated ith AWS Shield
+- integrated with AWS Shield
 - no caching, proxying packets to app running in one or more AWS regions
 - improves perf for a wide range of app over TCP/UDP
 - good for http that require static IP address
@@ -936,6 +941,9 @@ There are two patterns of app communication:
 **CloudWatch:**
 - provide metrics for every services in AWS
 - metric = variable to montior (CPU utilization, NetworkIn..), they have timestamps
+- monitor, store and access log files 
+- also for on-premises servers
+- CW billing metric data is stored in US East (N.Virginia) us-east-1
 
 **CW Alarms:**
 - used to trigger notif for any metric
@@ -970,14 +978,15 @@ There are two patterns of app communication:
 - CT Insights automated analysis of CT Events
 
 **X-Ray:**
-- tracing requestts and visual analysis of our app
+- debug performance issues for a serverless application built using a microservices architecture
+- tracing requests and visual analysis of our app
 - troubleshooting perf (bottlenecks)
-- understand dependencies ina microservice archi
+- understand dependencies in a microservice archi
 - pinpoint service issues
 - review request behavior
 - find errors and exceptions
 - look if we are meeting rime SLA (service-level agreement) -> are we replying on time to requests ?
-- where a am throttled
+- where it's throttled
 - identify users that are impatced
 
 **Code-Guru:**
@@ -1001,6 +1010,7 @@ There are two patterns of app communication:
 - a public subnet is a subnet that is accessible from the internet
 - a private subnet is a subnet not accessible from the internet
 - to define access to the internet and between subnets we use Route Tables
+- a vpc spans all of the AZ in the region, whereas a subnet spans only one AZ in the region
 
 **Internet Gateway & NAT Gateways:**
 - Internet Gateways helps our VPC instances to connect with the internet and public subnets have a route to the internet gateway
@@ -1008,7 +1018,7 @@ There are two patterns of app communication:
 - CIDR = range of IP 
 
 **Network ACL & Security Groups:**
--  ACL is Access Control List: 
+-  NACL is Ntwork Access Control List: 
   - firewall which controls traffic from and to subnet
   - have ALLOW and DENY rules that only include IP addresses  
   - attached at the subnet level
@@ -1077,10 +1087,11 @@ There are two patterns of app communication:
 
 **DDoS Protection:**
 - Distributed Denial-of-Service:
-- AWS Shield Standard: 
+- AWS Shield Standard:
+  - enabled for all AWS customers by default with no add cost
   - provides protection from attacks such as SYN/UDP Floods, Reflection attacks and other layer 3/4 attacks
 - AWS Shield Advanced: 
-  - 24/7 premium DDoS protection, with response team
+  - 24/7 premium DDoS protection, with response team (running on Route53 and Global Accelerator)
   - protect against more sophisticated attack 
 - AWS WAF: 
   - filter specific requests based on rules
@@ -1106,7 +1117,7 @@ There are two patterns of app communication:
 - Encryption Auto enabled:CT Logs, S3 Glacier, storage gateway
 
 **CloudHSM**:
-- AWS provisions encryption hardware but we manage keys ourselves
+- AWS provisions hardware device for any data encryption operations in the cloud, but we manage keys ourselves
 - Dedicated hardware -> Hardware Security Module
 
 **Customer Masters Keys (CMK):**
@@ -1168,6 +1179,7 @@ There are two patterns of app communication:
 **Macie:**
 - fully managed data security and data privacy service that uses ML and pattern matching to discover and protect your sensitive data in AWS
 - helps identify and alert to sensitive data such as personnaly identifiable (PII)
+- Macie automatically provides an inventory of Amazon S3 buckets including a list of unencrypted buckets, publicly accessible buckets, and buckets shared with AWS accounts outside those you have defined in AWS Organizations
 
 **Security Hub:**
 - central security tool to manage security accross several AWS accounts and automate security checks
@@ -1201,6 +1213,7 @@ There are two patterns of app communication:
 **Rekognition:**
 - Find objects, people, text, scenes and videos using ML
 - Facial analysis and search to do user verification, people counting
+- regional scope
 - create a db of "familiar faces" or compare against celebrities
 
 **Transcribe:**
@@ -1210,6 +1223,7 @@ There are two patterns of app communication:
 - supports Automatic Language Identification 
 
 **Polly:**
+- TTS: Text-To-Speech
 - Turn text into speech using deep learning
 - allow to create app that talk
 
@@ -1314,6 +1328,12 @@ There are two patterns of app communication:
 - ML savings Plan: sagemaker...
 - setup from AWS Cost Explorer console
 
+**Credits:**
+- applied in the following order:
+  - soonest expiring
+  - least number of applicable products
+  - oldest credit
+
 **Compute Optimizer:**
 - Reduce costs and improve perf by recommending optimal AWS resources for workloads
 - Help choose optimal config and right-size workloads (over/under provisioned)
@@ -1340,6 +1360,7 @@ There are two patterns of app communication:
 - Resources created by CF are all tagged the same way
 - common tags are Name, Env, Team
 - tags can be used to create Resource Groups (mange the tags using Tag Editor)
+- for ex: to separate cost for AWS services by the department for cost allocation
 
 **Cost & Usage Reports (CUR):**
 - dive deeper into aws costs and usage, contains the most comprehensive set of AWS cost and usage data available, including additional metadata about AWS services, pricing, and reservations
@@ -1375,6 +1396,7 @@ There are two patterns of app communication:
   - security
   - fault tolerance
   - service limits
+  - checks identify ways to optimize your AWS infrastructure, improve security and performance, reduce costs, and monitor service quotas
 - for ex, warns when volumes (EBS) are unused
 
 **TA - Support Plans:**
@@ -1392,12 +1414,14 @@ There are two patterns of app communication:
   - Case severity/response time (general guidance, system impaired)
 - Business Support Plan (24/7)
   - used for prod workloads
+  - technical support & architectural guidance contextual to specific use-cases
   - Trusted advisor full set of checks + API access
   - 24/7 phone, email and chat access to Cloud Support Engineers
   - unlimited cases/contacts
   - access to Infrastructure Event Management for add fee
   - case severity/response (+ prod system impaired/prod system down)
 - Enterprise On-Ramp Support plan (24/7):
+  - online training with self-paced labs
   - used for pord/business critical workloads
   - access to a pool of Technical Account Managers (TAM)
   - Concierge Support Team (for billing and account best practices)
@@ -1556,7 +1580,8 @@ There are two patterns of app communication:
 - FIS create an experiment template to generate disruptions
 
 **Step Functions:**
-- build serverless visual workflow to orchestrate our Lambda functions
+- lets you coordinate multiple AWS services into serverless workflows
+- build serverless visual workflow to orchestrate our Lambda functions (can use AWS Glue and SageMaker too)
 - design a graph and say at each step of the graph, in case of success or failure, what goes on next ?
 - allow to have complex workflows within AWS
 - features: sequence, parallel, conditions, timeouts, error handling..
@@ -1705,7 +1730,8 @@ Free tool to review our archi against the 6 pillars Well-Architected Framework a
 - AWS Forums (community)
 - AWS Whitepapers & Guides: for example the well architected framework
 - AWS Quick Starts:
-  - automated, glod-standard deployments in the AWS Cloud
+  - automated, glob-standard deployments in the AWS Cloud
+  - quickly deploy a popular technology on AWS
   - build a prod env quickly with templates
   - leverages CF
 - AWS Solutions: vetted technology solutions for the AWS Cloud (for ex AWS Landing Zone, replaced by AWS Control Tower)
