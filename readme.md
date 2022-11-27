@@ -60,7 +60,13 @@ Switch = takes a packet and send it to the correct server/client on the network
   - Proximity to customers: reduced latency
   - Available services within a Region
   - Pricing: varies region to region
-- AWS Availabality Zones: usually 3, min is 2 and max is 6 (for ex ap-southest-2a, ap-southest-2b). Separate from each other, discrete data centers with redundant power, networking and connectivity. They are connected with high bandwidth and ultra-low latency. Link together, they will form a region.
+- AWS Availabality Zones: 
+  - usually 3, min is 2 and max is 6 (for ex ap-southest-2a, ap-southest-2b)
+  - Separate from each other, discrete data centers with redundant power, networking and connectivity. 
+  - They are connected with high bandwidth and ultra-low latency. 
+  - Link together, they will form a region. 
+  - One or more data centers in the same location
+  - all traffic between AZ is encrypted
 - AWS Data Centers
 - AWS Edge Locations / Points of Presence: 216 points of presence in 84 cities across 42 countries, content is delivered to end users with low latency. 
 
@@ -73,6 +79,9 @@ Switch = takes a packet and send it to the correct server/client on the network
 - no security violations
 - no network abuse
 - no e-mail or other message abuse
+
+**AWS Resource Groups:**
+Helps organizing AWS resources, manage and automate tasks on large numbers of resources at a time.
 
 ## IAM
 
@@ -149,6 +158,10 @@ AWS Software Development Kit:
 ## AWS CLI
 
 `aws configure`: configure account on CLI with access keys
+
+**Access keys:**
+- use for programmatic access to AWS resources from the WS CLI/API
+- long-term credentials for an IAM user or the AWS account root user
 
 ## EC2 
 
@@ -313,6 +326,7 @@ Recipe = Document that defines how the source image is going to be customized.
 
 **EFS:**
 - Elastic File System
+- can be used with on-premises systems
 - scale on demand to petabytes
 - Third type of storage we can attach onto an EC2 instance
 - managed NFS (network file system) that can be mounted on hundreds of EC2 instances
@@ -474,12 +488,15 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **Storage Classes:**
 - S3 can move between classes manually or using S3 Lifecycle config
-- Durability (same for all classes) and Availability (varies on storage classes)  
+- Durability (same for all classes) and Availability (varies on storage classes) 
+- 99,999999999% durability
+- store data in a flat non-herarchical structure
+
 
 - General Purpose:
-  - 99,999999999% durability
   - Used for frequently accessed data
   - Big Data Analytics, mobile & gaming app, etc..
+  - no retrieval fee
 - Infrequent Access (IA):
   - less frequently accessed but requires rapid access when needed
   - disaster recovery, backups (standard infrequent access: S3 Standard-IA)
@@ -490,7 +507,7 @@ Not related to scalability, new IT resources are only a click away, which means 
   - Glacier Instant Retrieval: millisecond retrieval, min storage duration 90 days
   - Glacier Flexible Retrieval:  expedited (1 to 5 minutes), Standard (3 to 5 hours), Buk (5 to 12 hours), min storage duration 90 days
   - Glacier Deep Archive: long term storage, satandard (12 hours), Bulk (48h), min storage 180 days (data accessed once or twice a year, backups & recovery)
-- Intelligent Tiering: small monthly monitoring and auto-tiering fee, moves objects automatically between access tiers based on usage:
+- Intelligent Tiering: small monthly monitoring and auto-tiering fee, no retrieval fee, moves objects automatically between access tiers based on usage:
   - frequent access tier: default tier
   - infrequent access tier: obj not accessed for 30 days
   - archive instant access tier: objects not accessed for 90 days
@@ -562,6 +579,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - can't SSH into
 - Postgres, MySQL, Aurora(AWS Proprietary db)
 - better perf than a customer-managed db instance
+- reserved instance pricing available
 
 **Amazon Aurora:**
 - support postgreSQL and MySQL
@@ -716,8 +734,9 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **API Gateway:**
 - the API Gateway will proxy requests coming from client to lambda
-- fully managed serviceto easily create, publish, maintain, monitor and secure APIs
+- fully managed service to easily create, publish, maintain, monitor and secure APIs
 - supports RESTful APIs and WebSocket APIs, security, user auth, API throttling, API keys
+- can be configured to send data directly to amazon Kinesis Data Stream
 
 **Batch:**
 Jobs that can run without end user interaction, or can be scheduled to run as resources permit, are called batch jobs. Batch processing is for those frequently used programs that can be executed with minimal human interaction. A program that reads a large file and generates a report, for example, is considered to be a batch job.
@@ -759,7 +778,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **Elastic Beanstalk:**
 - Web App 3-tier: ELB -> EC2/ASG -> RDS/ElastiCache
-- easy to use service for deploying and scaling web apps and services (it provide server)
+- easy to use service free of cost, for deploying and scaling web apps and services (it provide server)
 - upload code, then Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring
 - developer centric view of deploying an app on AWS
 - it uses EC2, ASG, ELB, RDS, etc..
@@ -777,7 +796,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
   - ckecks for app health, published health events
 
 **CodeDeploy:**
-- deploy our app automatically
+- deploy our app code automatically
 - work with EC2 instances, Fargate, Lambda and on-premises servers -> hybrid service
 - servers/instances must be provisioned and configured ahead of time with the CodeDeploy Agent
 
@@ -874,12 +893,13 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - integrated with AWS Shield
 - no caching, proxying packets to app running in one or more AWS regions
 - improves perf for a wide range of app over TCP/UDP
-- good for http that require static IP address
+- good for non-http use cases
+- provide static IP addresses that act as a fixed entrypoint to our app
 
 **AWS Outposts:**
 - "server racks" that offers the same AWS infra, services, APIs & tools to build our own app on premises just as in the cloud
 - aws will setup and manage "outposts racks" within our on premises infra and we can start leverage AWS services on premises
-- we rare responsible for the physical security of the rack
+- we are responsible for the physical security of the rack
 - low latency, local data processing, data residency, easier migration, fully managed service
 - with rack, can use EC2, EBS, S3, EKS, ECS, RDS, EMR..
 
@@ -971,11 +991,15 @@ There are two patterns of app communication:
 - we can archive events sent to an event bus, and replay them
 
 **CloudTrail:**
+- track user activity and detect unusual API usage
 - provides governance, compliance and operational/risk audit for the AWS account
-- get an history of events. Audit API calls made within account by Console, SDK, CLI and AWS services
+- get an history of events. Audit API calls made within account by Console, SDK, CLI and AWS services. Also identify user who temrinate an RDS DB instance for ex
 - can put logs from CT to CW Logs or S3
 - a trail can be applied to all regions (default) or a single one
-- CT Insights automated analysis of CT Events
+- CT Insights:
+  - automated analysis of CT Events
+  - Raise alarms whenever the baseline resource numbers are crossed
+  - helps AWS users identify and respond to unusual activity associated with write API calls by continuously analyzing CloudTrail management events
 
 **X-Ray:**
 - debug performance issues for a serverless application built using a microservices architecture
@@ -1048,12 +1072,18 @@ There are two patterns of app communication:
 - VPC Endpoint Gateway: S3 & DynamoDB
 - VPC Endpoint Interface: the rest (ENI)
 
+**VPC Interface Endpoint:**
+- elastic network interface with a private IP address from the IP address range of the subnet that serves as en entry point for traffic destined to a supported service
+- powered by AWS PrivateLink
+
 **PrivateLink:**
 - VPC Endpoint Service family
+- enables to privately access services by using private IP addresses
 - most secure & scalable way to expose a service to 1000s of VPC (private network)
 - does not require VPC peering, internet gateway, NAT, route tables..
 
 **VPN:**
+- Establish a secure network connection between on-premises network and AWS
 - Site to Site VPN:
   - secure connection between on-premises VPN to AWS cloud resources 
   - connection auto encrypted
@@ -1090,10 +1120,12 @@ There are two patterns of app communication:
 - AWS Shield Standard:
   - enabled for all AWS customers by default with no add cost
   - provides protection from attacks such as SYN/UDP Floods, Reflection attacks and other layer 3/4 attacks
+  - protecrtion for EC2, CF
 - AWS Shield Advanced: 
   - 24/7 premium DDoS protection, with response team (running on Route53 and Global Accelerator)
   - protect against more sophisticated attack 
 - AWS WAF: 
+  - can be used to protect on-premises resources if they are deployed behind an ALB
   - filter specific requests based on rules
   - protect from common web exploits (layer 7 -> HTTP)
   - on ALB, API Gateway, CF
@@ -1101,7 +1133,7 @@ There are two patterns of app communication:
   - protects from common attacks like SQL injection and Cross-Site Scripting (XSS)
   - size constraints, geo-match (block countries)
   - rate-based rules (to count occurences of events) - DDoS protection
-- CF and R53: availability protection, combned with AWS Shield, provides attack mitigation at the edge
+- CF and R53: availability protection, combined with AWS Shield, provides attack mitigation at the edge
 - Be ready to scale - AWS auto-scaling
 
 **Encryption:**
@@ -1278,7 +1310,11 @@ There are two patterns of app communication:
 - allows to manage multiple AWS accounts and automate the account creation processus
 - main account is *master* account 
 - cost benefits:
-  - consolidated Biling across all accounts - single payment method
+  - consolidated Biling across all accounts:
+    - single payment method, one bill for multiple accounts
+    - easy tracking of charges across accounts
+    - share of volume pricing discounts, reserved instances and savings plans
+    - no extra fee
   - pricing benefits from aggregated usage (volume discount for EC2, S3..)
   - pooling of reserved EC2 instances 
 - API is available to automate AWS account creation
@@ -1345,12 +1381,13 @@ There are two patterns of app communication:
 - Estimating costs in the cloud, for our archi solution: Pricing Calculator
 - Tracking costs in the cloud: 
   - Billing Dashboard (with Free Tier Dashboard usage)
-  - Cost Allocation Tags
+  - Cost Allocation Tags: 
   - Cost and Usage Reports
   - Cost Explorer
 - Monitoring against costs plans: Biling Alarms & Budgets
 
 **Cost Allocation Tags:**
+- used to tag and categorize resources and then run view the billing in Cost Explorer and the cost allocation report
 - track AWS costs on a detailed level 
 - AWS generated tags that automatically applied to the resource we create and start with rpefix *aws:* for ex *aws:createdBy*
 - User-defined tags: defined by user and start with a prefix *user:* for ex *user:Stack*
@@ -1396,23 +1433,23 @@ There are two patterns of app communication:
   - security
   - fault tolerance
   - service limits
-  - checks identify ways to optimize your AWS infrastructure, improve security and performance, reduce costs, and monitor service quotas
-- for ex, warns when volumes (EBS) are unused
+- checks identify ways to optimize your AWS infrastructure, improve security and performance, reduce costs, and monitor service quotas
+- for ex, warns when volumes (EBS)/EC2 instances are unused, or underused, identify if unrestricted access to resources has been allowed by SG
 
 **TA - Support Plans:**
 - 7 CORE checks (basic & dev support plan): S3 bucket permissions, security groups specific ports unrestricted, IAM Use (one IAM user mini), MFA on root account, EBS Public snapshots, RDS public snapshots, service limits
 - FULL checks (business & ent support plan): full checks on the 5 categories, ability to set CW alarms when reaching limits, promgrammatic access using AWS Support API
 
 **AWS Support Plans Pricing:**
-- Basic support: 
+- **Basic support:**
   - Customer Service & Communities - 24x7 access to customer service, doc, whitepapers and support forums
   - AWS Trusted Advisor: 7 core checks and guidance to provision resources following best practices to increase perf and improve security
   - AWS Personal Health Dashboard: peersonalized view of the health of AWS services, and alerts when our resources are impacted
-- Developer support plan:
+- **Developer support plan:**
   - business hours email access to Cloud Support Associates (emailing AWS through opening support tickets in the console)
   - unlimited cases/ 1 primary contact
   - Case severity/response time (general guidance, system impaired)
-- Business Support Plan (24/7)
+- **Business Support Plan (24/7):**
   - used for prod workloads
   - technical support & architectural guidance contextual to specific use-cases
   - Trusted advisor full set of checks + API access
@@ -1420,14 +1457,14 @@ There are two patterns of app communication:
   - unlimited cases/contacts
   - access to Infrastructure Event Management for add fee
   - case severity/response (+ prod system impaired/prod system down)
-- Enterprise On-Ramp Support plan (24/7):
+- **Enterprise On-Ramp Support plan (24/7):**
   - online training with self-paced labs
   - used for pord/business critical workloads
   - access to a pool of Technical Account Managers (TAM)
   - Concierge Support Team (for billing and account best practices)
   - Infra Event Management, Well-Architected & Operations Reviews
   - case severity/response (+ business-critical system down <30 min)
-- Enterprise Support Plan (24/7):
+- **Enterprise Support Plan (24/7):**
   - mission critical workloads
   - access to a designated Technical Account Manager (TAM
   - case severity/response (+ business-critical system down <15 min)
@@ -1482,9 +1519,9 @@ There are two patterns of app communication:
 - best practice is to deploy workspaces as close as users (as many workspaces regions as center locations to minimize latency)
 
 **AppStream 2.0:**
-- Desktop App Streaming Service
+- Desktop App Streaming Service, fully-managed non-persistent app and desktop streaming service
 - deliver to any computer without acquiring and provisioning infra (no need to connect a VDI)
-- the app is delivered from within a web browser and works with any device that has a web browser
+- the app is delivered from within a web browser and works with any device that has a web browser (devices/laptops)
 - allow to config an instance type per app type (CPU, RAM, GPU)
 
 **Sumerian:**
