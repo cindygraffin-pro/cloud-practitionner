@@ -131,10 +131,15 @@ Online policy is a policy attach to only one user. For users in group, they inhe
 - some AWS services will need to perform actions on our behalf
 - we'll assign permissions to AWS services with IAM roles
 - for ex, EC2 Instance Roles, Lambda Function Roles, etc...
+- Just one IAM role to a single instance
 
 **Security Tools:**
 - IAM Credentials Report (account-level): a report that lists all our account's users and the status of their various credentials
 - IAM Access Advisor (user-level):  shows the service permissions granted to a user and when those services where last accessed, it can be use to revise policies
+
+**IAM Access Analyzer:**
+- helps identify the resources in org and accounts, such as S3 buckets or IAM roles, shared with an external entity
+- let us identify unintended access to our resources and data
 
 **Shared Responsability Model for IAM:**
 - AWS responsibilities:
@@ -270,7 +275,7 @@ Common pattern, for ex **m5.2xlarge**:
 
 **EBS Volume:**
 
-- Elastic Block Store Volume: network drive we can attach to our instances while they run, or also detach and attach to another
+- Elastic Block Store Volume: network drive we can attach to our instances while they run, or also detach and attach to another (virtual hard disk in the cloud)
 - block level storage
 - allows instances to persist data, even after their termination
 - can only be mounted to one instance at a time (at the CCP level) (but not for EBS Multi-Attach feature)
@@ -285,6 +290,7 @@ Delete on Termination attribute:
 **Snapshots:**
 - make a backup of EBS volume at a point of time
 - recommended to detach the volume before
+- they are stored on S3
 - can copy accross AZ or Region
 - snapshot will restore the EBS volume
 
@@ -392,7 +398,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - seamlessy handle failures of downstram instances
 - do regular health checks to instances
 - provide SSL termination (HTTPS) fro websites
-- high availability across zones
+- high availability across AZ
 
 **ELB:**
 - managed load balancer: AWS guarantees it will be working, takes care of upgradesn maintenance, high availability
@@ -492,8 +498,8 @@ Not related to scalability, new IT resources are only a click away, which means 
 - 99,999999999% durability
 - store data in a flat non-herarchical structure
 
-
 - General Purpose:
+  - charges for data egress and per GB/month storage fee
   - Used for frequently accessed data
   - Big Data Analytics, mobile & gaming app, etc..
   - no retrieval fee
@@ -505,7 +511,7 @@ Not related to scalability, new IT resources are only a click away, which means 
   - low-cost object storage meant for archiving/backup
   - auto data encryption (AES-256)
   - Glacier Instant Retrieval: millisecond retrieval, min storage duration 90 days
-  - Glacier Flexible Retrieval:  expedited (1 to 5 minutes), Standard (3 to 5 hours), Buk (5 to 12 hours), min storage duration 90 days
+  - Glacier Flexible Retrieval:  expedited (1 to 5 minutes), Standard (3 to 5 hours), Bulk (5 to 12 hours), min storage duration 90 days
   - Glacier Deep Archive: long term storage, satandard (12 hours), Bulk (48h), min storage 180 days (data accessed once or twice a year, backups & recovery)
 - Intelligent Tiering: small monthly monitoring and auto-tiering fee, no retrieval fee, moves objects automatically between access tiers based on usage:
   - frequent access tier: default tier
@@ -580,6 +586,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Postgres, MySQL, Aurora(AWS Proprietary db)
 - better perf than a customer-managed db instance
 - reserved instance pricing available
+- can be reserved
 
 **Amazon Aurora:**
 - support postgreSQL and MySQL
@@ -607,6 +614,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Same way RDS is to get managed relational db but for Redis or Memcached
 - in-memory db high perf, low latency
 - reduce load off db for read intensive workloads
+- can be reserved
 
 **DynamoDB:**
 - fully managed highly available replication accross 3 AZ
@@ -616,6 +624,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - single digit ms latency - low latency retrieval
 - standard & Infrequent Acess (IA) table class
 - key/value db
+- can be reserved
 
 **DynamoDB Accelerator - DAX:**
 - Fully managed in memory cache for DynamoDB
@@ -636,6 +645,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - pay as you go
 - sql interface for performing the queries 
 - BI (Business Intelligence) tools such as AWS Quicksight or Tableau integrated with it
+- can be reserved
 
 **EMR:**
 - Elastic MapReduce
@@ -734,7 +744,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **API Gateway:**
 - the API Gateway will proxy requests coming from client to lambda
-- fully managed service to easily create, publish, maintain, monitor and secure APIs
+- fully managed service to easily create, publish, maintain, monitor and secure APIs (serverless)
 - supports RESTful APIs and WebSocket APIs, security, user auth, API throttling, API keys
 - can be configured to send data directly to amazon Kinesis Data Stream
 
@@ -755,7 +765,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **Lightsail:**
 - easiest way to launch and manage a virtual private server with AWS
-- virtual servers, storage, db and networking
+- virtual servers, storage, db and networking (virtual private server, managed MySQL db)
 - simpler alternative to using EC2, RDS, ELB, EBS, etc..
 - setup notif and monitoring 
 - simple web APP (MEAN, NodeJs for ex), websites (wordpress for ex), dev/test env
@@ -1030,7 +1040,7 @@ There are two patterns of app communication:
 
 **VPC:**
 - private network to deploy resources in (regional resource)
-- subnets allow to partition the network inside of our VPC (AZ resource)
+- subnets allow to partition the network inside of our VPC (AZ resource), we can create one or more subnets within each AZ
 - a public subnet is a subnet that is accessible from the internet
 - a private subnet is a subnet not accessible from the internet
 - to define access to the internet and between subnets we use Route Tables
@@ -1184,6 +1194,7 @@ There are two patterns of app communication:
 - portal that provides customers with on-demand access to AWS compliance doc and agreements
 - Artifact Reports 
 - Artifact Agreements
+- SOC reports (Service Organization Control), PCI reports (Payment Card Inudstry), BAA (Business Associate Addendum), NDA (Nondisclosure Agreement)
 
 
 **GuardDuty:**
@@ -1201,6 +1212,8 @@ There are two patterns of app communication:
 - a risk score is associated with all vulnerabilities for prioritization
 
 **Config:**
+- fully managed service
+- provides you with an AWS resource inventory, configuration history, and configuration change notifications to enable security and regulatory compliance
 - enables you to assess, audit, and evaluate the configurations of your AWS resources
 - helps with auditing and recording compliance of our AWS resources
 - helps record config and changes over time
@@ -1225,7 +1238,7 @@ There are two patterns of app communication:
 - auto collects ans processes events from VPC Flow Logs, CTrail, GuardDuty and create a unified view
 - produces visualizations with detail sand context to get the root cause
 
-**Config:**
+**AWS Abuse:**
 - report suspected AWS resources used for abusive or illegal purpose
 - abusive & prohibited behaviors: spam, port scanning, DoS or DDoS attacks, intrusion attempts, hosting objectionable or copyrighted content, distributing malware
 
@@ -1461,7 +1474,7 @@ There are two patterns of app communication:
   - online training with self-paced labs
   - used for pord/business critical workloads
   - access to a pool of Technical Account Managers (TAM)
-  - Concierge Support Team (for billing and account best practices)
+  - Concierge Support Team (for billing and account best practices or issues)
   - Infra Event Management, Well-Architected & Operations Reviews
   - case severity/response (+ business-critical system down <30 min)
 - **Enterprise Support Plan (24/7):**
@@ -1479,6 +1492,7 @@ There are two patterns of app communication:
 **Cognito:**
 - way to provide identity for web and mob app users (potentially millions) instead of creating them an IAM user, we create a user in Cognito
 - own db of users with integrated login in mobile/web app
+- supports sign-in with social identity providers like Apple, Google, FB, Amazon, and enterprise identity providers via SAML 2.0 (Security Assertion Markup Language) and OpenID Connect
 
 **Microsoft Active Directory (AD):**
 - found on ay Windows Server with AD Domain services
@@ -1566,7 +1580,7 @@ There are two patterns of app communication:
 **AWS Backup:**
 - fully-managed service to centrally manage and automate backups accross AWS services
 - on-demand and scheduled backups, create a Backup Plan
-- supports PITR (point in time recovery)
+- supports PITR (point in time recovery -> restore db in 5 minutes)
 - retention periods, lifecycle management, backup policies
 - cross-region backup
 - cross-account backup (using AWS organizations)
