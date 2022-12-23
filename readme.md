@@ -61,7 +61,7 @@ Switch = takes a packet and send it to the correct server/client on the network
   - Available services within a Region
   - Pricing: varies region to region
 - AWS Availabality Zones: 
-  - usually 3, min is 2 and max is 6 (for ex ap-southest-2a, ap-southest-2b)
+  - usually 3, min is 3 and max is 6 (for ex ap-southest-2a, ap-southest-2b)
   - Separate from each other, discrete data centers with redundant power, networking and connectivity. 
   - They are connected with high bandwidth and ultra-low latency. 
   - Link together, they will form a region. 
@@ -331,19 +331,20 @@ Recipe = Document that defines how the source image is going to be customized.
 - good for buffer, cache, temp content (informations that change frequently)
 
 **EFS:**
-- Elastic File System
+- Elastic File System, regional service
 - can be used with on-premises systems
 - scale on demand to petabytes
 - Third type of storage we can attach onto an EC2 instance
 - managed NFS (network file system) that can be mounted on hundreds of EC2 instances
-- works with Linux EC2 instances in multi AZ (can be mounted on instances accross multiple AZ)
+- works with Linux EC2 instances in multi AZ, **high available** by default (can be mounted on instances accross multiple AZ)
 - highly available, scalable, expensive, pay per use, no capacity planning
-- all instances can mount the same EFS drive, using an EFS Mount Target and they will all see the same files
+- all instances can mount the same EFS drive, using an EFS Mount Target and they will all see the same files (accross many AZ, Regions and VPCs)
 
 *EFS Infrequent Access (EFS-IA):*
 - Storage class for EFS that is cost-optimized for files not accessed every day (up to 92% lower)
 - EFS will automatically move files to EFS-IA based on the last time they were accessed
 - enable EFS-IA with a Lifecycle Policy (for ex files not accessed for 60 days)
+- pay a fee each time we read from or write data in
 
 **Shared Responsability Model for EC2:**
 - AWS responsibilities:
@@ -502,7 +503,7 @@ Not related to scalability, new IT resources are only a click away, which means 
   - charges for data egress and per GB/month storage fee
   - Used for frequently accessed data
   - Big Data Analytics, mobile & gaming app, etc..
-  - no retrieval fee
+  - **no retrieval fee**
 - Infrequent Access (IA):
   - less frequently accessed but requires rapid access when needed
   - disaster recovery, backups (standard infrequent access: S3 Standard-IA)
@@ -513,7 +514,7 @@ Not related to scalability, new IT resources are only a click away, which means 
   - Glacier Instant Retrieval: millisecond retrieval, min storage duration 90 days
   - Glacier Flexible Retrieval:  expedited (1 to 5 minutes), Standard (3 to 5 hours), Bulk (5 to 12 hours), min storage duration 90 days
   - Glacier Deep Archive: long term storage, satandard (12 hours), Bulk (48h), min storage 180 days (data accessed once or twice a year, backups & recovery)
-- Intelligent Tiering: small monthly monitoring and auto-tiering fee, no retrieval fee, moves objects automatically between access tiers based on usage:
+- Intelligent Tiering: small monthly monitoring and auto-tiering fee, **no retrieval fee**, moves objects automatically between access tiers based on usage:
   - frequent access tier: default tier
   - infrequent access tier: obj not accessed for 30 days
   - archive instant access tier: objects not accessed for 90 days
@@ -572,7 +573,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Bridge between on-premise data and cloud data in S3
 - Hybrid storage service to allow on-premises to seamlessly use the AWS Cloud
 - Differents Types: File Gateway, Volume Gateway, Tape Gateway
-- cannot be used for dara archival
+- cannot be used for data archival
 - encryption auto enabled (using SSL)
 
 
@@ -585,7 +586,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - can't SSH into
 - Postgres, MySQL, Aurora(AWS Proprietary db)
 - better perf than a customer-managed db instance
-- reserved instance pricing available
+- **reserved instance** pricing available
 - can be reserved
 
 **Amazon Aurora:**
@@ -617,7 +618,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - can be reserved
 
 **DynamoDB:**
-- fully managed highly available replication accross 3 AZ
+- fully managed **highly available** replication accross 3 AZ
 - no sql db
 - scales to massive workloads, distributed "serverless" db
 - millions of req per sec, trillions of row, 100s of TB storage
@@ -672,7 +673,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **Neptune:**
 - Fully managed graph db, for ex a popular dataset be a social network
-- highly available accross 3AZ with up to 15 read replicas
+- **highly available** accross 3AZ with up to 15 read replicas
 - build and run app working with highly connected datasets - optimized for complex and hard queries
 - can store billions of relations and query the graph ms latency
 
@@ -843,7 +844,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - provides a unified user interface so you can view operational data from multiple AWS services and allows you to automate operational tasks across your AWS resources
 - allow to group resources
 - helps manage and operate resources at scale
-- helps manage EC2 and on-premises systems at scale -> hybrid service
+- helps manage EC2 and **on-premises** systems at scale -> hybrid service
 - get operational insights about the state of the infra
 - patching automation run commands accross an entire fleet of servers, store parameter config with SSM Parameter Store
 - for Windows and Linux OS
@@ -1040,7 +1041,7 @@ There are two patterns of app communication:
 
 **VPC:**
 - private network to deploy resources in (regional resource)
-- subnets allow to partition the network inside of our VPC (AZ resource), we can create one or more subnets within each AZ
+- subnets allow to partition the network inside of our VPC (AZ resource), we can create one or more subnets within each AZ (not a service, a range of IP addresses)
 - a public subnet is a subnet that is accessible from the internet
 - a private subnet is a subnet not accessible from the internet
 - to define access to the internet and between subnets we use Route Tables
@@ -1092,6 +1093,9 @@ There are two patterns of app communication:
 - most secure & scalable way to expose a service to 1000s of VPC (private network)
 - does not require VPC peering, internet gateway, NAT, route tables..
 
+**API Gateway:**
+- fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. 
+
 **VPN:**
 - Establish a secure network connection between on-premises network and AWS
 - Site to Site VPN:
@@ -1132,7 +1136,7 @@ There are two patterns of app communication:
   - provides protection from attacks such as SYN/UDP Floods, Reflection attacks and other layer 3/4 attacks
   - protecrtion for EC2, CF
 - AWS Shield Advanced: 
-  - 24/7 premium DDoS protection, with response team (running on Route53 and Global Accelerator)
+  - 24/7 premium DDoS protection, with response team (running on Route53 and Global Accelerator, also on EC2)
   - protect against more sophisticated attack 
 - AWS WAF: 
   - can be used to protect on-premises resources if they are deployed behind an ALB
@@ -1465,6 +1469,7 @@ There are two patterns of app communication:
 - **Business Support Plan (24/7):**
   - used for prod workloads
   - technical support & architectural guidance contextual to specific use-cases
+  - programmatic access to AWS Support Center
   - Trusted advisor full set of checks + API access
   - 24/7 phone, email and chat access to Cloud Support Engineers
   - unlimited cases/contacts
@@ -1786,7 +1791,9 @@ Free tool to review our archi against the 6 pillars Well-Architected Framework a
   - build a prod env quickly with templates
   - leverages CF
 - AWS Solutions: vetted technology solutions for the AWS Cloud (for ex AWS Landing Zone, replaced by AWS Control Tower)
-- AWS Support
+- AWS Support Center:
+  - hub for managing support cases
+  - allow to open a Technical Support case online 
 - AWS Marketplace: digital catalog with thousands of software listings from independent software vendros (3rd party)
 - AWS Training:
   - AWS Digital (online) and Classroom Training (in-person or virtual)
@@ -1805,7 +1812,8 @@ Free tool to review our archi against the 6 pillars Well-Architected Framework a
     - AWS Navigate Partner: train the Partners
 
 **AWS Knowledge Center:**
-Contains the most frequent & common questions/requests.
+- Contains the most frequent & common questions/requests.
+- AWS solutions provided
 
 **AWS IQ:** 
 - Quickly find a professional help for our AWS projects 
