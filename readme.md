@@ -175,7 +175,7 @@ Elastic Compute Cloud = way of doing IaaS
 - Renting virtual machines (EC2)
 - Storing data on virtual drives (EBS)
 - Distributing load across machines (ELB)
-- Scaling services using an auto-scaling group (ASG)
+- Scaling services using an auto-scaling group (ASG), **free of cost**
 
 **Sizing and config options:**
 - Different OS: Linux, Windows, or MacOS
@@ -282,6 +282,7 @@ Common pattern, for ex **m5.2xlarge**:
 - bound to a specific availabilty zone, if we want to move in another AZ we need to snapshot it
 - have a provisioned capacity, size un GBs, and IOPS (I/O operations per seconds) that we can upgrade
 - one instance can have severall volumes
+- charged by volume type and provisionned IOPS
 
 Delete on Termination attribute:
 - controls the ebs behaviour when an EC2 instance terminates
@@ -526,6 +527,9 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Server-side encryption: server encrypts the file after receiving it
 - client-side encryption: encrypts the file before uploading it
 
+**S3 Access Logs:**
+- detailed records for the requests that are made to a bucket
+
 **Shared Responsability Model for S3:**
 - AWS responsibilities:
   - Infrastructure (global network security, availability)
@@ -572,6 +576,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 **AWS Storage Gateway:**
 - Bridge between on-premise data and cloud data in S3
 - Hybrid storage service to allow on-premises to seamlessly use the AWS Cloud
+- set of hybrid cloud services that gives on-premises access to virtually unlimited cloud storage
 - Differents Types: File Gateway, Volume Gateway, Tape Gateway
 - cannot be used for data archival
 - encryption auto enabled (using SSL)
@@ -789,7 +794,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **Elastic Beanstalk:**
 - Web App 3-tier: ELB -> EC2/ASG -> RDS/ElastiCache
-- easy to use service free of cost, for deploying and scaling web apps and services (it provide server)
+- easy to use service **free of cost**, for deploying and scaling web apps and services (it provide server)
 - upload code, then Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring
 - developer centric view of deploying an app on AWS
 - it uses EC2, ASG, ELB, RDS, etc..
@@ -875,6 +880,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **Route 53:**
 - managed DNS
+- domain registration, health checks and monitoring
 - DNS is a collection of rules and records which helps clients understand how to reach a server through URLs
 - IPv4 = A record / IPv6 = quadruple AAAA record / CNAME = hostname to hostname / hostname to AWS = Alias
 - Policies:
@@ -1007,6 +1013,7 @@ There are two patterns of app communication:
 - get an history of events. Audit API calls made within account by Console, SDK, CLI and AWS services. Also identify user who temrinate an RDS DB instance for ex
 - can put logs from CT to CW Logs or S3
 - a trail can be applied to all regions (default) or a single one
+- logs of management events
 - CT Insights:
   - automated analysis of CT Events
   - Raise alarms whenever the baseline resource numbers are crossed
@@ -1376,7 +1383,7 @@ There are two patterns of app communication:
 **Savings Plan:**
 - commit a certain $ amount per hour for 1 or 3 years
 - easiest way to setup long-term commitments on AWS
-- EC2 Savings Plan: commit to usage of individual instance in a region (eg C5 or M5)
+- EC2 Instance Savings Plan: commit to usage of individual instance in a region (eg C5 or M5)
 - Compute Savings Plan: regardless of family, region, size, os, tenancy, comptue options
 - ML savings Plan: sagemaker...
 - setup from AWS Cost Explorer console
@@ -1470,7 +1477,7 @@ There are two patterns of app communication:
   - used for prod workloads
   - technical support & architectural guidance contextual to specific use-cases
   - programmatic access to AWS Support Center
-  - Trusted advisor full set of checks + API access
+  - Trusted advisor full set of checks + API access (programmatic access)
   - 24/7 phone, email and chat access to Cloud Support Engineers
   - unlimited cases/contacts
   - access to Infrastructure Event Management for add fee
@@ -1536,6 +1543,7 @@ There are two patterns of app communication:
 - secured data, integrated with KMS
 - pay as you go service with monthly and hourly rates
 - best practice is to deploy workspaces as close as users (as many workspaces regions as center locations to minimize latency)
+- global service
 
 **AppStream 2.0:**
 - Desktop App Streaming Service, fully-managed non-persistent app and desktop streaming service
@@ -1670,11 +1678,12 @@ There are two patterns of app communication:
 - allow for evolutionary archi: design based on changing requirements
 - drive archi using data
 - improve through game days: simulate app for flash sales days (stressing the system)
+- free tool
 
 **Design Principles:**
 - Scalability: vertical & horizontal
 - Disposable resources: servers should be disposable & easily configured
-- Automation: serverless, IaaS, auto-scalling
+- Automation: serverless, IaaS, auto-scaling
 - Loose Coupling: break the monolith down into smaller coupled components (a change or failure on one component should not cascade to the other)
 - think Services, not Servers: don't just use EC2, use managed services, db, serverless..  
   
