@@ -7,11 +7,11 @@ Cloud Practitioner exam - CLF-C01
 **How the web works ?**
 
 The client will use the network to route the packets, the data into the server, then the server will reply to us and we will get the response.  
-Client and server have an IP address that allow each one to reach other.
+Client and server have an IP address that allow each one to reach the other.
 
 **What is a server composed of ?**
 - CPU: little piece that do some computations, it do some calculations and find results
-- RAM: Fast memory, allow to store and fin information fastly
+- RAM: Fast memory, allow to store and find information quickly
 CPU + RAM = like a brain
 - Storage Data (for ex files)
 - Database: store data in a structured way
@@ -23,9 +23,9 @@ Switch = takes a packet and send it to the correct server/client on the network
 **What is Cloud Computing ?** 
 - on-demand delivery of compute power, database storage, apps and others IT resources -> on demand self-service
 - through a cloud services platform with pay-as-you-go pricing
-- provision exactly right type and size of computing resources needed
+- provision exactly the right type and size of computing resources needed
 - access as many resources almost instantly -> broad network access
-- simply way to access servers, storage, db and a set of app services
+- simple way to access servers, storage, db and a set of app services
 - multi-tenancy and resource pooling: multiple customers can share the same infra and app with security and privacy
 - rapid elasticity and scalability
 
@@ -60,7 +60,7 @@ Switch = takes a packet and send it to the correct server/client on the network
   - Proximity to customers: reduced latency
   - Available services within a Region
   - Pricing: varies region to region
-- AWS Availabality Zones: 
+- AWS Availabality Zones (AZ): 
   - usually 3, min is 3 and max is 6 (for ex ap-southest-2a, ap-southest-2b)
   - Separate from each other, discrete data centers with redundant power, networking and connectivity. 
   - They are connected with high bandwidth and ultra-low latency. 
@@ -95,7 +95,7 @@ Identity and access management, Global service
 - Users or Group can be assigned JSON documents called policies, that define permissions of those users
 - Apply the least privilege principle
 
-Online policy is a policy attach to only one user. For users in group, they inherit the same policy. An user that belongs to two groups or more will inherit policy of each group.
+Online policy is a policy attached to only one user. For users in group, they inherit the same policy. An user that belongs to two groups or more will inherit policy of each group.
 
 **Policy Structure:**
 - JSON document
@@ -124,7 +124,7 @@ Online policy is a policy attach to only one user. For users in group, they inhe
 - different options: 
   - virtual MFA device like Google Authenticator (one phone) or Authy (multi device), they support multiple tokens on a single device
   - Universal 2nd factor (U2F) Security Key: physical device like YubiKey (3rd party), support multiple root and IAM users, plug into USB port, open auth standard hosted by the FIDO alliance
-  - Hardware Key Fob MFA Device: generates a six-digit numeric code based upon a time-synchornized one-time pw algo
+  - Hardware Key Fob MFA Device: generates a six-digit numeric code based upon a time-synchronized one-time pw algo
   - Hardware Key Fob MFA Device for AWS GovCloud (US)
 
 **IAM Roles for Services:**
@@ -135,14 +135,14 @@ Online policy is a policy attach to only one user. For users in group, they inhe
 
 **Security Tools:**
 - IAM Credentials Report (account-level): a report that lists all our account's users and the status of their various credentials
-- IAM Access Advisor (user-level):  shows the service permissions granted to a user and when those services where last accessed, it can be use to revise policies
+- IAM Access Advisor (user-level):  shows the service permissions granted to a user and when those services where last accessed, it can be used to revise policies
 
 **IAM Access Analyzer:**
 - helps identify the resources in org and accounts, such as S3 buckets or IAM roles, shared with an external entity
 - let us identify unintended access to our resources and data
 
 **Shared Responsability Model for IAM:**
-- AWS responsibilities:
+- AWS responsabilities:
   - Infrastructure (global network security)
   - config and vulnerability of services they offer
   - compliance validation
@@ -158,7 +158,7 @@ Online policy is a policy attach to only one user. For users in group, they inhe
 
 AWS Software Development Kit:
 - language specific APIs
-- enables to access and manage AWS services programmatically
+- enables access and manage AWS services programmatically
 
 ## AWS CLI
 
@@ -185,16 +185,16 @@ Elastic Compute Cloud = way of doing IaaS
   - network-attached (EBS & EFS)
   - hardware (EC2 Instance Store)
 - Network card: speed of the card, public IP address
-- Firewell rules
+- Firewall rules
 - Bootstrap script: EC2 User Data
 
 **EC2 User Data:**
 - bootstrapping = launching commands when a machine starts
 - run once at first start
-- automate boot with tasks such as installing updates, software, dowloading files from the internet, etc..
+- automate boot with tasks such as installing updates, software, downloading files from the internet, etc..
 - the script runs with the root user
 
-:warning: If we stop and relaunch an instance, its PUBLIC Ip addresses can change 
+> :warning: If we stop and relaunch an instance, its PUBLIC Ip addresses can change 
 
 **Instance Types:**
 
@@ -210,7 +210,7 @@ Elastic Compute Cloud = way of doing IaaS
   - app performing real-time processing of big unstructured data
 - Storage Optimized:
   - storage-intensive tasks that require high, sequential read and write access to large data sets on local storage
-  - for ex online transaction processing (OLTP) systems, relationnal and NoSQL db, cache for in-memory db, data warehousing app, distributed file systems
+  - for ex Online Transaction Processing (OLTP) systems, relationnal and NoSQL db, cache for in-memory db, data warehousing app, distributed file systems
   
 Common pattern, for ex **m5.2xlarge**:
 - m: instance class
@@ -221,7 +221,7 @@ Common pattern, for ex **m5.2xlarge**:
 - Control how traffic is allowed into or out of our EC2 Instances.
 - only contain *allow* rules
 - rules can reference by IP or by security group
-- act like a "firewell" on EC2 instances
+- act like a "firewall" on EC2 instances
 - They regulate access to ports, authorised IP ranges, control inboud and outboud network
 - can be attached to multiple instances
 - locked down to a region/VPC (virtual private cloud) combination
@@ -241,20 +241,20 @@ Common pattern, for ex **m5.2xlarge**:
 **SSH:**
 - CLI utility for Mac, Linux and Windows >= 10
 - Also have Putty for all Windows
-- And EC2 Instance Connect thzt will use the web browser and is valid for all
+- And EC2 Instance Connect that will use the web browser and is valid for all
 - allow to control a remote machine using the cli
 
 `ssh -i file.pem ec2-user@35.180.34.141`: connect to an ec2 instance via ssh, ec2-user is the name of the user and then the public IP address  
 `chmod 0400 file.pem`: give the right to read on the pem file
 
 **Pricing:**
-- On-demand instance: short workloads, biling per second for Linux and Windows, and per hour for others
+- On-demand instance: short workloads, billing per second for Linux and Windows, and per hour for others
 - reserved (1 & 3 years): 
   - Reserved Instances: long workloads, reserved instance's scope (regional or zonal)
   - Convertible Reserved Instances: long workloads with flexible instances, allow to change instance type, family, OS, scope and tenancy
 - Saving Plans (1 & 3 years): commitment to an amount of usage, long workloads, specific instance family & AWS region but flexible with size, OS and Tenancy (Host, Dedicated or Default)
 - Spot Instances: short workloads, cheap, can lose instance, enable to request unused instances, batch jobs
-- Dedicated Hosts: book an entire physical server, controle instance placement. Allows to address compliance requirements and use existing server-bound software licences (on demand or reserved)
+- Dedicated Hosts: book an entire physical server, control instance placement. Allows to address compliance requirements and use existing server-bound software licences (on demand or reserved)
 - Dedicated Instances: no other customers will share our hardware but others instances in same account use it
 - Capacity reservations: reserve capacity in a specific AZ for any duration
 
@@ -285,25 +285,25 @@ Common pattern, for ex **m5.2xlarge**:
 - charged by volume type and provisionned IOPS
 
 Delete on Termination attribute:
-- controls the ebs behaviour when an EC2 instance terminates
+- controls the EBS behaviour when an EC2 instance terminates
 - by default, root EBS is deleted but not others 
 
 **Snapshots:**
-- make a backup of EBS volume at a point of time
+- make a backup of EBS volume at a point in time
 - recommended to detach the volume before
 - they are stored on S3
 - can copy accross AZ or Region
 - snapshot will restore the EBS volume
 
 Features:
-- EBS Snapshot Archive: move a snap to an 'archive tier' (ebs snapshot archive), but it take 24 to 72 hours for restoring the archive
+- EBS Snapshot Archive: move a snap to an 'archive tier' (EBS snapshot archive), but it take 24 to 72 hours for restoring the archive
 - Recycle Bin: retention from 1 day to 1 year
 
 **AMI:**
 Amazon Machine Image: Ready to use EC2 instances with our customizations
 
 - customization of an EC2 instance (software, OS, config, monitoring, etc ..)
-- faster boot/config time bc software is pre-packaged
+- faster boot/config time because software is pre-packaged
 - built for a specific region (and can be copied accross regions)
 - launch EC2 instances from:
   - a public AMI: AWS provided (for ex Amazon Linux 2)
@@ -318,7 +318,7 @@ Amazon Machine Image: Ready to use EC2 instances with our customizations
 **EC2 Image Builder:**
 - automated pipeline
 - Used to automate the creation of VM or container images
-- AUtomate the creation, maintain, validate and test EC2 AMIs:
+- Automate the creation, maintain, validate and test EC2 AMIs:
   - Create a builder EC2 Instance that build components and applied (customize software on instance), then an AMI will be created, and after that the test suite is run by test EC2 instance. Finally, AMI is distributed (can be multiple regions)
 - Can be run on a schedule
 
@@ -341,7 +341,7 @@ Recipe = Document that defines how the source image is going to be customized.
 - highly available, scalable, expensive, pay per use, no capacity planning
 - all instances can mount the same EFS drive, using an EFS Mount Target and they will all see the same files (accross many AZ, Regions and VPCs)
 
-*EFS Infrequent Access (EFS-IA):*
+**EFS Infrequent Access (EFS-IA):**
 - Storage class for EFS that is cost-optimized for files not accessed every day (up to 92% lower)
 - EFS will automatically move files to EFS-IA based on the last time they were accessed
 - enable EFS-IA with a Lifecycle Policy (for ex files not accessed for 60 days)
@@ -379,33 +379,33 @@ Elastic Load Balancing & Auto Scaling Groups
 - app/sytem can handle greater loads by adapting, two kinds:
   - vertical scalability: increase size of the instance, the limit is the hardware -> scale up/down
   - horizontal scalability (= elasticity): for distributed systems, such as db, increase the number of instances/systems for the app -> scale out/in
--linked but different to high availability  
+- linked but different to high availability  
 -> ability to accomodate a larger load by making the hardware strong (scale up) or by adding nodes (scale out)
 
 **High availability:**
 - running app/system in at least 2 AZ
-- goes in  hand with horizontal scaling
+- goes in hand with horizontal scaling
 - in order to survive a data center loss
 
 **Elasticity:**
-Once a system is scalable, elasticy means that there will be some "auto-scaling" so that the system can scale based on the load, it's "cloud-friendly" (pay per use, match demande, optimize costs)
+Once a system is scalable, elasticity means that there will be some "auto-scaling" so that the system can scale based on the load, it's "cloud-friendly" (pay per use, match demand, optimize costs)
 
 **Agility:**
 Not related to scalability, new IT resources are only a click away, which means reducing time to make those resources availables to developers from weeks to just minutes
 
 **Load Balancer:**
-- server that forward traffic to multiple servers (C2 instances) downstream
+- server that forward traffic to multiple servers (EC2 instances) downstream
 - spread load acrosse multiple downstream instances
 - expose a single point of access (dns) to the app
-- seamlessy handle failures of downstram instances
+- seamlessly handle failures of downstream instances
 - do regular health checks to instances
-- provide SSL termination (HTTPS) fro websites
+- provide SSL termination (HTTPS) for websites
 - high availability across AZ
 
 **ELB:**
-- managed load balancer: AWS guarantees it will be working, takes care of upgradesn maintenance, high availability
+- managed load balancer: AWS guarantees it will be working, takes care of upgrades maintenance, high availability
 - 3 kinds:
-  - Application Load Blanacer (HTTP/HTTPS only) - Layer 7 (high-level protocol)
+  - Application Load Balancer (HTTP/HTTPS only) - Layer 7 (high-level protocol)
   - Network Load Balancer (ultra high perf, allows for TCP) - Layer 4 (lower level protocol)
   - Classic Load Balancer (slowly retiring) - Layer 4 & 7 at same time
 
@@ -420,9 +420,9 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **Scaling Strategies:**
 - Manual Scaling: update the size of an ASG manually
-- Dynamic Scaling: repond to changing demand automatically:
+- Dynamic Scaling: respond to changing demand automatically:
   - simple/step scaling: when a cloudwatch alarm is triggered (for ex CPU >70%), then add 2 units, or remove if for ex CPU <30%
-  - target tracking scaling: for ex i want the average asg cpu to stay around 40%
+  - target tracking scaling: for ex I want the average ASG cpu to stay around 40%
   - scheduled scaling: anticipate scaling based on known usage patterns
 - Predictive Scaling:
   - uses machine laerning to predict future traffic ahead of time
@@ -446,17 +446,17 @@ Not related to scalability, new IT resources are only a click away, which means 
 - must have a globally unique name (accross all regions all acounts)
 - defined at the region level
 - Naming convention:
-  - no uppercase, no underscose
+  - no uppercase, no underscore
   - 3-63 characters long
   - not an IP
-  - not start *with xn--* and not end with *-s3alias*
+  - not starting *with xn--* and not ending with *-s3alias*
 
 **Objects:**
 - Have a key that is the FULL path (for s3://my-bucket/**my-folder-name/my-file.txt**, key is the bold text)
-- key is composed from a prefix (folders) and object name (filename)
+- key is composed of a prefix (folders) and object name (filename)
 - there's no concept of directories, it's keys with very long names that contain slashes
 - Object values are the content of the body:
-  - max obj size is 5TB (5000GB)
+  - max obj size is 5TB (5 000GB)
   - if uploading more than 5GB, must use "multi-part upload"
 - metadata about file (list of text key/value pairs)
 - tags (unicode key/value pair - up to 10) - useful for security/lifecyle
@@ -480,16 +480,16 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **Versioning:**
 - it is enabled at the bucket level
-- protct against unintended deletes (ability to restore a version)
+- protect against unintended deletion (ability to restore a version)
 - easy roll back to previous version
-- any file not versioned will have version "null"
-- suspending versionning does not delete the previous versions
+- any file not versioned will have version `null`
+- suspending versioning does not delete the previous versions
 
 **Replication:**
 - CRR: Cross-Region replication
-- SRR: Same_Region Replication
+- SRR: Same Region Replication
 - Must enable versioning in source and destination buckets
-- Buckets can be in diff AWS accounts
+- Buckets can be in different AWS accounts
 - Copying is asynchronous
 - Must give proper IAM permissions to S3
 
@@ -544,11 +544,11 @@ Not related to scalability, new IT resources are only a click away, which means 
   - data encryption
 
 **AWS Snow Family:**
-- Highly secure, portable devices to collect and process data at the edge, and migrate data into and out of AWS -> offline devices to perform data migrations (use if it takes more than a week to transfer over the network)
+- Highly secure, portable devices to collect and process data at the edge, and migrate data in and out of AWS -> offline devices to perform data migrations (use if it takes more than a week to transfer over the network)
 - Data migration: 
   - snowcone: small, portable computing, rugged and secured, used for edge computing, storage and data transfer (8TBs usable). Can be sent back to AWS offline or connected to the internet using AWS DataSync. Up to 24 TB 
   - snowball edge: move TBs or PBs of data in or out of AWS, pay per data transfer job, provide block storage and Amazon S3 compatible object storage (snowball edge storage optimized or snowball edge compute optimized, the two with HDD capacity) -> 80TB usable
-  - snowmobile: transfer exabytes of data ( 1 EB = 1000 PB Petabytes = 1000000 TBs), each snowmobile has 100PB capacity. High security: temperature controlled, GPS, always under video surveillance 
+  - snowmobile: transfer exabytes of data ( 1 EB = 1 000 PB Petabytes = 1 000 000 TBs), each snowmobile has 100PB capacity. High security: temperature controlled, GPS, always under video surveillance 
 - Edge computing: snowcone, snowball edge
 
 **Edge Computing:**
@@ -556,7 +556,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - Use cases are preprocess data, machine learning at the edge, transcoding media streams
 - Snow Family:
   - snowcone: 2CPU, 4GB of memory, wired or wireless access, USB-C power
-  - snowball edge - compture optimized: 52vCPU, 208GB of RAM, optional GPU, 42 TB usable storage
+  - snowball edge - compute optimized: 52vCPU, 208GB of RAM, optional GPU, 42 TB usable storage
   - snowball edge - storage optimized: Up to 40vCPU, 80GB of RAM, object storage clustering available
 -> All can run EC2 Instances & AWS Lambda functions (using AWS IoT Greengrass)
 
@@ -564,10 +564,10 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 1. Request Snowball devices from the AWS console for delivery
 2. Install the snowball client/AWS OpsHub on our servers
-3. Connect the snowball to our servers and copy files using the lcient
+3. Connect the snowball to our servers and copy files using the client
 4. Ship back the device 
 5. Data will be loaded into an S3 bucket
-6. Snowball is completely wiped
+6. Snowball is completly wiped
 
 **AWS OpsHub:**
 - to use snow family we need a CLI
@@ -587,9 +587,9 @@ Not related to scalability, new IT resources are only a click away, which means 
 **AWS RDS:**
 - Relational Database Service
 - used for OLTP workloads
-- managed by AWS: automated provisioning, OS patching, continuous backups and restore to specific timestamp, multi AZ setup for DR (disaster recovery), scaling
+- managed by AWS: automated provisioning, OS patching, continuous backups and restore to specific timestamp, multi AZ setup for DR (Disaster Recovery), scaling
 - can't SSH into
-- Postgres, MySQL, Aurora(AWS Proprietary db)
+- Postgres, MySQL, Aurora (AWS Proprietary db)
 - better perf than a customer-managed db instance
 - **reserved instance** pricing available
 - can be reserved
@@ -624,7 +624,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **DynamoDB:**
 - fully managed **highly available** replication accross 3 AZ
-- no sql db
+- NoSQL db
 - scales to massive workloads, distributed "serverless" db
 - millions of req per sec, trillions of row, 100s of TB storage
 - single digit ms latency - low latency retrieval
@@ -647,9 +647,9 @@ Not related to scalability, new IT resources are only a click away, which means 
 - load data once every hour
 - 10x better perf than other data warehouse, scale to PBs of data
 - columnar storage of data
-- massively parallel query execution (MPP), highly aailable
+- massively parallel query execution (MPP), highly available
 - pay as you go
-- sql interface for performing the queries 
+- SQL interface for performing the queries 
 - BI (Business Intelligence) tools such as AWS Quicksight or Tableau integrated with it
 - can be reserved
 
@@ -662,25 +662,25 @@ Not related to scalability, new IT resources are only a click away, which means 
 
 **Athena:**
 - serverless query service to perform analytics against S3 objects
-- uses std SQL lgg to query the files
+- uses standard SQL language to query the files
 - supports CVS, JSON, ORC, Avro and Parquet (built on Presto engine)
-- BI, analytics, logs, reporting, for ex for analyze data in S3 using serverless SQL
+- BI, analytics, logs, reporting, for ex to analyze data in S3 using serverless SQL
 
 **QuickSight:**
 - serverless machine learning-powered BI service to create interactive dashboards on the db
 - fast, auto-scalling
 
 **DocumentDB:**
-- DocumentDB is an AWS implementation for MongoDB noSQL db like aurora for relationnal db
-- mongoDB is used to store, query, and index JSON data
-- similar deployment concepts as aurora
+- DocumentDB is an AWS implementation for MongoDB NoSQL db like Aurora for relationnal db
+- MongoDB is used to store, query, and index JSON data
+- similar deployment concepts as Aurora
 - auto scales to workloads with millions of req per seconds
 
 **Neptune:**
-- Fully managed graph db, for ex a popular dataset be a social network
-- **highly available** accross 3AZ with up to 15 read replicas
+- Fully managed graph db, for ex a popular dataset like a social network
+- **highly available** accross 3 AZ with up to 15 read replicas
 - build and run app working with highly connected datasets - optimized for complex and hard queries
-- can store billions of relations and query the graph ms latency
+- can store billions of relations and query the graph with ms latency
 
 **QLDB:**
 - Quantum Ledger Database
@@ -699,7 +699,7 @@ Not related to scalability, new IT resources are only a click away, which means 
 - compatible with the frameworks Hyperledger Fabric & Ethereum
 
 **Glue:**
-- managed extract, transform and load (ETL) service
+- managed Extract, Transform and Load (ETL) service
 - useful to prepare and transform data for analytics
 - serverless service
 - Glue Data Catalog: catalog of datasets that will have a reference of everything, the colum names, the field names, types, etc ... and can be use by services such as Athena, Redshift and EMR to discover the datasets and build the proper schemas for them
@@ -755,12 +755,12 @@ Not related to scalability, new IT resources are only a click away, which means 
 - can be configured to send data directly to amazon Kinesis Data Stream
 
 **Batch:**
-Jobs that can run without end user interaction, or can be scheduled to run as resources permit, are called batch jobs. Batch processing is for those frequently used programs that can be executed with minimal human interaction. A program that reads a large file and generates a report, for example, is considered to be a batch job.
-- enables developers, scientists, and engineers to easily and efficiently run hundreds of thousands of batch computing jobs on AWS
+Jobs that can run without end user interaction, or can be scheduled to run as resources permit, are called batch jobs. Batch processing is for frequently used programs that can be executed with minimal human interaction. A program that reads a large file and generates a report, for example, is considered to be a batch job.
+- enables developers, scientists and engineers to easily and efficiently run hundreds of thousands of batch computing jobs on AWS
 - fully managed batch processing at any scale
-- run 100000s of computing 
+- run 100 000s of computing 
 - a "batch" job is a job with a start and an end (opposed to continuous)
-- batch will dynamically launche EC2 instances or spot instances
+- batch will dynamically launch EC2 instances or spot instances
 - provisions the right amount of compute/memory
 - we submit or schedule batch jobs and AWS Batch does the rest
 - they are defined as Docker images and run on ECS
@@ -782,19 +782,19 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 
 **Cloud Formation:**
 - declarative way of outlining AWS infra, for any resource (define templates)
-- CF creates those for us, in the right order, with the exact confi we specify
+- CF creates those for us, in the right order, with the exact config we specify
 - Infra as code
 - stack designer create a diagram with all resources and relations
 
 **CDK:**
-- define cloud infrastructure using a familiar lgg like JS, python, java and .NET
+- define cloud infrastructure using a familiar language like JS, python, java and .NET
 - the code is "compiled" into a CF template (JSON/YAML)
 - can deploy infra and app runtime code together
 - CDK App -> CDK CLI -> CF template -> CF
 
 **Elastic Beanstalk:**
 - Web App 3-tier: ELB -> EC2/ASG -> RDS/ElastiCache
-- easy to use service **free of cost**, for deploying and scaling web apps and services (it provide server)
+- easy to use service **free of cost**, for deploying and scaling web apps and services (it provides server)
 - upload code, then Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring
 - developer centric view of deploying an app on AWS
 - it uses EC2, ASG, ELB, RDS, etc..
@@ -803,7 +803,7 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - just the app code is the responsability of the dev
 - 3 archi models:
   - Single Instance deployment for dev
-  - LB + ASG fro prod or pre-prod
+  - LB + ASG for prod or pre-prod
   - ASG only: great for non-web apps in prod (workers)
 - supports go, java, php, python, nodeJs, docker, etc..
 - health monitoring:
@@ -866,14 +866,14 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - Chef & Puppet help config server auto, deploy, manage or perform repetitive actions (not created by AWS)
 - work great with EC2 & on-premises VM
 - OpsWork allow to managed Chef & Puppet (alternative to SSM)
-- provision std AWS resources (db, elb, ebs volumes..)
+- provision standard AWS resources (db, elb, ebs volumes..)
 - different OpsWork Layers
-- can't be used for running commandes or managing patches on service, neither for provisioning AWS infra
+- can't be used for running commands or managing patches on service, neither for provisioning AWS infra
 
 ## AWS Global Archi
 
 **Global App:**
-- deployed in multiple geogaphies
+- deployed in multiple geographies
 - decreased latency (time for a network packet to reach a server)
 - disaster recovery
 - attack protection
@@ -889,19 +889,18 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
   - Latency Routing Policy: look where client is located, based on the latency
   - Failover Routing Policy: Primary EC2 instance and failover one, health check on the primary, in case of fail redirect to failover
 
-
 **CloudFront:**
 - Content Delivery Network (CDN)
 - improves read perf by caching content at different edge locations, and content is served at the edge
 - 216 points of presence (edge locations)
 - great for static content that must be available everywhere
-- DDoS protection, integration with Shield and AWS web application firawell
+- DDoS protection, integration with Shield and AWS web application firewall
 - cache from:
   - S3 bucket (enhanced security with CF Origin Access Identity OAI, CF can be used as an ingress)
   - Custom Origin (HTTP): ALB, EC2 instance, S3 website, or any HTTP backend
 
 **S3 Transfer Acceleration:**
-- increase transfer speed by transfering file to an AWS edge location which will fprward the data to the S3 bucket in the target region
+- increase transfer speed by transfering file to an AWS edge location which will forward the data to the S3 bucket in the target region
 - only for uploads and downloads
 
 **AWS Global Accelerator:**
@@ -914,14 +913,14 @@ Jobs that can run without end user interaction, or can be scheduled to run as re
 - provide static IP addresses that act as a fixed entrypoint to our app
 
 **AWS Outposts:**
-- "server racks" that offers the same AWS infra, services, APIs & tools to build our own app on premises just as in the cloud
-- aws will setup and manage "outposts racks" within our on premises infra and we can start leverage AWS services on premises
+- "server racks" that offers the same AWS infra, services, APIs & tools to build our own app on premise just as in the cloud
+- aws will setup and manage "outposts racks" within our on premise infra and we can start leverage AWS services on premise
 - we are responsible for the physical security of the rack
 - low latency, local data processing, data residency, easier migration, fully managed service
 - with rack, can use EC2, EBS, S3, EKS, ECS, RDS, EMR..
 
 **AWS WaveLength:**
-- WaveLength Zones are infra deployments embedded within the telecommunication providers' datacenters at the edge of the 5G networks
+- WaveLength Zones are infra deployments embedded within the telecommunication provider's datacenters at the edge of the 5G networks
 - bring AWS services to the edge of 5G networks
 - ultra-low latency
 - traffic doesn't leave the Communication Service Provider's (CSP) network
@@ -941,11 +940,11 @@ There are two patterns of app communication:
 
 **SQS:**
 - simple queue service
-- producers send messages to the queue, and once messages are stored in a queue, then they can be red by consumers who will be polling the queue, that means requesting messages from the queue
+- producers send messages to the queue, and once messages are stored in a queue, then they can be read by consumers who will be polling the queue, that means requesting messages from the queue
 - fully managed service (serverless), used to decouple app
-- scales from 1 message per sec to 10000s
+- scales from 1 message per sec to 10 000s
 - default retention of messages: 4 days, maximum of 14 days
-- no limit how many messages in the queue
+- unlimited message queue size
 - messages are deleted after they're read by consumers
 - low latency
 
@@ -965,7 +964,7 @@ There are two patterns of app communication:
 - enables you to decouple microservices, distributed systems, and serverless applications
 
 **Amazon MQ:**
-- SQS and SNS are "cloud-native" services: proprietary protocols from AS
+- SQS and SNS are "cloud-native" services: proprietary protocols from AWS
 - when migrating to the cloud, instead of re-engineering the traditional app to use SQS and SNS we can use Amazon MQ
 - managed message broker service for:
   - RabbitMQ
@@ -977,24 +976,24 @@ There are two patterns of app communication:
 
 **CloudWatch:**
 - provide metrics for every services in AWS
-- metric = variable to montior (CPU utilization, NetworkIn..), they have timestamps
+- metric = variable to monitior (CPU utilization, Networking..), they have timestamps (temporal data)
 - monitor, store and access log files 
-- also for on-premises servers
+- also for on-premise servers
 - CW billing metric data is stored in US East (N.Virginia) us-east-1
 
 **CW Alarms:**
-- used to trigger notif for any metric
+- used to trigger notification for any metric
 - alarm actions:
   - auto-scaling: increase/decrease EC2 instances
   - ec2 actions: stop, terminate, reboot or recover
-  - SNS notif: send a notif into an SNS topic
+  - SNS notif: send a notification into an SNS topic
 - can choose a period
 - alarm states: OK/INSUFFICIENT_DATA/ALARM
 
 **CW Logs**
-- collect from apps (Elastic Beanstalk), containers (ECS), function, dns queries (Route53)
+- collect from apps (Elastic Beanstalk), containers (ECS), function, DNS queries (Route53)
 - CloudTrail based on filter
-- CW log agents: on EC2 machines or on-premises servers for have logs (verify IAM permissions)
+- CW log agents: on EC2 machines or on-premises servers to have logs (verify IAM permissions)
 - real-time monitoring
 - adjustable log retention
 
@@ -1005,7 +1004,7 @@ There are two patterns of app communication:
   - event pattern: event rules to react to a service doing something (for ex IAM root user sign in event)
 - Default event Bus comes from AWS services, Partner event bus comes from AWS SaaS Partners, and Custom event bus comes from custom apps
 - schema registry: model event schema
-- we can archive events sent to an event bus, and replay them
+- we can archive events sent to an event bus and replay them
 
 **CloudTrail:**
 - track user activity and detect unusual API usage
@@ -1020,7 +1019,7 @@ There are two patterns of app communication:
   - helps AWS users identify and respond to unusual activity associated with write API calls by continuously analyzing CloudTrail management events
 
 **X-Ray:**
-- debug performance issues for a serverless application built using a microservices architecture
+- debug performance issues for a serverless application built using a microservice architecture
 - tracing requests and visual analysis of our app
 - troubleshooting perf (bottlenecks)
 - understand dependencies in a microservice archi
@@ -1029,7 +1028,7 @@ There are two patterns of app communication:
 - find errors and exceptions
 - look if we are meeting rime SLA (service-level agreement) -> are we replying on time to requests ?
 - where it's throttled
-- identify users that are impatced
+- identify users that are impacted
 
 **Code-Guru:**
 - ML powered service for automated code reviews and app perf recommendations
@@ -1057,11 +1056,11 @@ There are two patterns of app communication:
 **Internet Gateway & NAT Gateways:**
 - Internet Gateways helps our VPC instances to connect with the internet and public subnets have a route to the internet gateway
 - NAT Gateways (AWS managed, created in public subnet) & NAT Instances (self-manged) allow instances in private subnets to access the internet while remaining private
-- CIDR = range of IP 
+- CIDR (Classless Inter Domain Routing ) = range of IP addresses
 
 **Network ACL & Security Groups:**
--  NACL is Ntwork Access Control List: 
-  - firewall which controls traffic from and to subnet
+-  NACL is Network Access Control List: 
+  - firewall which controls traffic from and to a subnet
   - have ALLOW and DENY rules that only include IP addresses  
   - attached at the subnet level
   - stateless: return traffic must be allowed by rules
@@ -1074,42 +1073,43 @@ There are two patterns of app communication:
 - capture info about IP traffic going into our interfaces
   - VPC Flow Logs
   - Subnet Flow Logs
-  - Elastic Nextwork Interface Flow Logs
+  - Elastic Network Interface Flow Logs
 - help to monitor & troubleshoot connectivity issues
 - captured network info from AWS managed interfaces like ELB, ElastiCache, RDS, Aurora...
 - logs data can go to S3/CW Logs
 
 **VPC Peering:**
 - Connect two VPC and make them behave as if they were in the same network
-- must not overlapping CIDC
+- must not overlap CIDR
 - peering connection is not transitive
 
 **VPC Endpoints:**
-- endpoints allow to connect VPC to to AWS Services using a private network instead of the public www network
+- endpoints allow to connect VPC to AWS Services using a private network instead of the public www network
 - better security and less latency
 - VPC Endpoint Gateway: S3 & DynamoDB
 - VPC Endpoint Interface: the rest (ENI)
 
 **VPC Interface Endpoint:**
-- elastic network interface with a private IP address from the IP address range of the subnet that serves as en entry point for traffic destined to a supported service
+- elastic network interface with a private IP address from the IP address range of the subnet that serves as an entry point for traffic destined to a supported service
 - powered by AWS PrivateLink
 
 **PrivateLink:**
 - VPC Endpoint Service family
 - enables to privately access services by using private IP addresses
-- most secure & scalable way to expose a service to 1000s of VPC (private network)
+- most secure & scalable way to expose a service to 1 000s of VPC (private network)
 - does not require VPC peering, internet gateway, NAT, route tables..
 
 **API Gateway:**
-- fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. 
+- fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale.
+- single endpoint to reach multiple APIs
 
 **VPN:**
-- Establish a secure network connection between on-premises network and AWS
+- Establish a secure network connection between on-premise networks and AWS
 - Site to Site VPN:
-  - secure connection between on-premises VPN to AWS cloud resources 
+  - secure connection between on-premise VPN to AWS cloud resources 
   - connection auto encrypted
   - goes over the public internet
-  - on premises it must use a Customer Gateway (CGW)
+  - on-premise it must use a Customer Gateway (CGW)
   - on AWS it must use a Virtual Private Gateway (VGW)
 - Direct Connect (DX)
   - physical connection btw on-premises and AWS
@@ -1139,12 +1139,12 @@ There are two patterns of app communication:
 **DDoS Protection:**
 - Distributed Denial-of-Service:
 - AWS Shield Standard:
-  - enabled for all AWS customers by default with no add cost
+  - enabled for all AWS customers by default with no added cost
   - provides protection from attacks such as SYN/UDP Floods, Reflection attacks and other layer 3/4 attacks
-  - protecrtion for EC2, CF
+  - protection for EC2, CF
 - AWS Shield Advanced: 
   - 24/7 premium DDoS protection, with response team (running on Route53 and Global Accelerator, also on EC2)
-  - protect against more sophisticated attack 
+  - protect against more sophisticated attacks 
 - AWS WAF: 
   - can be used to protect on-premises resources if they are deployed behind an ALB
   - filter specific requests based on rules
@@ -1175,7 +1175,7 @@ There are two patterns of app communication:
 
 **Customer Masters Keys (CMK):**
 - Customer Managed CMK:
-  - create, manage and used by the customer, can enable or disable
+  - created, managed and used by the customer, can enable or disable
   - possibility of rotation policy
   - can bring our own key
 - AWS managed CMK:
@@ -1229,7 +1229,7 @@ There are two patterns of app communication:
 - helps with auditing and recording compliance of our AWS resources
 - helps record config and changes over time
 - possibility of storing the config data into S3 (analyzed by Athena)
-- can receive alerts for any changes  (sns notif)
+- can receive alerts for any changes (sns notif)
 - per region service but can be aggregated across regions and accounts
 
 **Macie:**
@@ -1239,15 +1239,15 @@ There are two patterns of app communication:
 
 **Security Hub:**
 - central security tool to manage security accross several AWS accounts and automate security checks
-- collect potential issus & findings
+- collect potential issues & findings
 - integrated dashboard showing current security and compliance status to quickly take actions
-- auto aggregate alerts in predefined or personal findings formats from varous AWS services & AWS partner tools (GuardDuty, Inspector, Macie, IAM Access Analyzer, Systems Manager, Firewall Manager, Partner Network Solutions)
+- auto aggregate alerts in predefined or personal findings formats from various AWS services & AWS partner tools (GuardDuty, Inspector, Macie, IAM Access Analyzer, Systems Manager, Firewall Manager, Partner Network Solutions)
 - must first enable AWS Config Service
 
 **Amazon Detective:**
-- analyzes, investigates and quickly identifies the root cause of security issus or suspicious activities (ML and graphs)
-- auto collects ans processes events from VPC Flow Logs, CTrail, GuardDuty and create a unified view
-- produces visualizations with detail sand context to get the root cause
+- analyzes, investigates and quickly identifies the root cause of security issues or suspicious activities (ML and graphs)
+- auto collects and processes events from VPC Flow Logs, CTrail, GuardDuty and create a unified view
+- produces visualizations with details and context to get the root cause
 
 **AWS Abuse:**
 - report suspected AWS resources used for abusive or illegal purpose
@@ -1274,7 +1274,7 @@ There are two patterns of app communication:
 
 **Transcribe:**
 - auto convert speech into text
-- used a deep learning process called automatic speech recognition (ASR) to convert speech to text quickly and accurately
+- use a deep learning process called automatic speech recognition (ASR) to convert speech to text quickly and accurately
 - can auto remove any PII using Redaction
 - supports Automatic Language Identification 
 
@@ -1285,12 +1285,12 @@ There are two patterns of app communication:
 
 **Translate:**
 - natural and accurate lgg translation
-- allow to localize content such as websites and app for international users, and to easily translate large volumes of text efficiency
+- allow to localize content such as websites and app for international users and to easily translate large volumes of text efficiently
 
 **Lex:**
 - same techno that powers Alexa
-- automatic pseech recognition (ASR) to convert speech to text (callers)
-- natural lgg understanding to recognize the intent of text
+- automatic speech recognition (ASR) to convert speech to text (callers)
+- natural language understanding to recognize the intent of text
 - helps build chatbots, call center bots
 
 **Connect:**
@@ -1304,16 +1304,16 @@ There are two patterns of app communication:
 
 **SageMaker:**
 - fully managed service for dev/data scientists to build ML models
-- helps with labelling, building, training, and tuning, deploy quickly
+- helps with labelling, building, training and tuning, deploy quickly
 
 **Forecast:**
-- fully managed service that uses ML to deliver highly accurate forecasts (for ex predict future sales of a raincoat)
+- fully managed service that uses ML to deliver highly accurate forecasts (for ex to predict future sales of a raincoat)
 - reduce forecasting time from months to hours
 
 **Kendra:**
 - fully managed document search service powered by ML
 - extract answers from within a document (text,pdf...)
-- natural lgg capabilities
+- natural language capabilities
 - learn from user interactions/feedback to promote preferred results (incremental learning)
 - ability to manually fine-tune search results
 
@@ -1323,7 +1323,7 @@ There are two patterns of app communication:
 - can expose a customized personalized API
 
 **Textract:**
-- auto extracts text, handwriting, and data from any scanned documents using AI and ML
+- auto extracts text, handwriting and data from any scanned documents using AI and ML
 - extracts data from forms and tables
 - read and process any type of documents
 
@@ -1353,10 +1353,10 @@ There are two patterns of app communication:
 
 **Service Control Policies (SCP):**
 - Whitelist or blacklist IAM actions
-- appplied at the Organizational Unit or account level but not to the master account
+- applied at the Organizational Unit or account level but not to the master account
 - SCP is applied to all the Users and Roles of the Acccount, including Root, but does not affect service-linked roles
 - SCP must have an explicit Allow (does not allow everything by default)
-- used for example to restrict access to certain services (can't use EMR), enforce PCI compliance by explicitely disabling services
+- used for example to restrict access to certain services (can't use EMR), enforce PCI compliance by explicitly disabling services
 - inherit of allow/deny
 
 **Org Consolidated Biling:**
@@ -1365,7 +1365,7 @@ There are two patterns of app communication:
 - managment account can turn off reserved instances sharing for any account in the AWS Org including itself
 
 **Control Tower:**
-- easy wat to set up and govern a secure and compliant multi-account AWS env based on best practices
+- easy way to set up and govern a secure and compliant multi-account AWS env based on best practices
 - automate the setup of env
 - auto ongoing policy management using guardrails
 - detect policy violations and remediate them
@@ -1384,7 +1384,7 @@ There are two patterns of app communication:
 - commit a certain $ amount per hour for 1 or 3 years
 - easiest way to setup long-term commitments on AWS
 - EC2 Instance Savings Plan: commit to usage of individual instance in a region (eg C5 or M5)
-- Compute Savings Plan: regardless of family, region, size, os, tenancy, comptue options
+- Compute Savings Plan: regardless of family, region, size, os, tenancy, compute options
 - ML savings Plan: sagemaker...
 - setup from AWS Cost Explorer console
 
@@ -1405,7 +1405,7 @@ There are two patterns of app communication:
 - Estimating costs in the cloud, for our archi solution: Pricing Calculator
 - Tracking costs in the cloud: 
   - Billing Dashboard (with Free Tier Dashboard usage)
-  - Cost Allocation Tags: 
+  - Cost Allocation Tags 
   - Cost and Usage Reports
   - Cost Explorer
 - Monitoring against costs plans: Biling Alarms & Budgets
@@ -1413,23 +1413,23 @@ There are two patterns of app communication:
 **Cost Allocation Tags:**
 - used to tag and categorize resources and then run view the billing in Cost Explorer and the cost allocation report
 - track AWS costs on a detailed level 
-- AWS generated tags that automatically applied to the resource we create and start with rpefix *aws:* for ex *aws:createdBy*
+- AWS generated tags which are automatically applied to the resource we create and start with prefix *aws:* for ex *aws:createdBy*
 - User-defined tags: defined by user and start with a prefix *user:* for ex *user:Stack*
 
 **Tagging:**
 - tags are used for organizing resources: EC2, RDS, VPC.. 
 - Resources created by CF are all tagged the same way
 - common tags are Name, Env, Team
-- tags can be used to create Resource Groups (mange the tags using Tag Editor)
+- tags can be used to create Resource Groups (manage the tags using Tag Editor)
 - for ex: to separate cost for AWS services by the department for cost allocation
 
 **Cost & Usage Reports (CUR):**
-- dive deeper into aws costs and usage, contains the most comprehensive set of AWS cost and usage data available, including additional metadata about AWS services, pricing, and reservations
+- dive deeper into aws costs and usage, contains the most comprehensive set of AWS cost and usage data available, including additional metadata about AWS services, pricing and reservations
 - lists AWS usage for each service category used by an account and its IAM users in hourly or daily line items, as well as any tags that that we have activated for cost allocation purposes
 - can be integrated and analyzed with Athena, Redshift or QuickSight
 
 **Cost Explorer:**
-- Visualize, understand, and manage AWS costs and usage over time
+- Visualize, understand and manage AWS costs and usage over time
 - create custom reports that analyze cost and uage data
 - analyze data at high level: total costs and usage accross all accounts OR monthly, hourly, resource level granularity
 - choose an optimal Savings Plan
@@ -1457,18 +1457,18 @@ There are two patterns of app communication:
   - security
   - fault tolerance
   - service limits
-- checks identify ways to optimize your AWS infrastructure, improve security and performance, reduce costs, and monitor service quotas
-- for ex, warns when volumes (EBS)/EC2 instances are unused, or underused, identify if unrestricted access to resources has been allowed by SG
+- checks identify ways to optimize your AWS infrastructure, improve security and performance, reduce costs and monitor service quotas
+- for ex, warns when volumes (EBS)/EC2 instances are unused or underused, identify if unrestricted access to resources has been allowed by SG
 
 **TA - Support Plans:**
-- 7 CORE checks (basic & dev support plan): S3 bucket permissions, security groups specific ports unrestricted, IAM Use (one IAM user mini), MFA on root account, EBS Public snapshots, RDS public snapshots, service limits
-- FULL checks (business & ent support plan): full checks on the 5 categories, ability to set CW alarms when reaching limits, promgrammatic access using AWS Support API
+- 7 CORE checks (basic & dev support plan): S3 bucket permissions, security groups specific ports unrestricted, IAM Use (one IAM user minimum), MFA on root account, EBS Public snapshots, RDS public snapshots, service limits
+- FULL checks (business & ent support plan): full checks on the 5 categories, ability to set CW alarms when reaching limits, programmatic access using AWS Support API
 
 **AWS Support Plans Pricing:**
 - **Basic support:**
   - Customer Service & Communities - 24x7 access to customer service, doc, whitepapers and support forums
   - AWS Trusted Advisor: 7 core checks and guidance to provision resources following best practices to increase perf and improve security
-  - AWS Personal Health Dashboard: peersonalized view of the health of AWS services, and alerts when our resources are impacted
+  - AWS Personal Health Dashboard: peersonalized view of the health of AWS services and alerts when our resources are impacted
 - **Developer support plan:**
   - business hours email access to Cloud Support Associates (emailing AWS through opening support tickets in the console)
   - unlimited cases/ 1 primary contact
@@ -1484,30 +1484,30 @@ There are two patterns of app communication:
   - case severity/response (+ prod system impaired/prod system down)
 - **Enterprise On-Ramp Support plan (24/7):**
   - online training with self-paced labs
-  - used for pord/business critical workloads
+  - used for prod/business critical workloads
   - access to a pool of Technical Account Managers (TAM)
   - Concierge Support Team (for billing and account best practices or issues)
   - Infra Event Management, Well-Architected & Operations Reviews
   - case severity/response (+ business-critical system down <30 min)
 - **Enterprise Support Plan (24/7):**
   - mission critical workloads
-  - access to a designated Technical Account Manager (TAM
+  - access to a designated Technical Account Manager (TAM)
   - case severity/response (+ business-critical system down <15 min)
   
 ## Advanced Identity
 
 **Security Token Service (STS):**
-- enables to create temporary, limited-rpivileges credentials to access our AWS resources
+- enables to create temporary, limited-privileges credentials to access our AWS resources
 - short-term credentials: config of expiration period
 - uses cases: identity federation (for external systems), IAM Roles for cross/same account access, IAM Roles for EC2
 
 **Cognito:**
-- way to provide identity for web and mob app users (potentially millions) instead of creating them an IAM user, we create a user in Cognito
+- way to provide identity for web and mobile app users (potentially millions) instead of creating an IAM user, we create a user in Cognito
 - own db of users with integrated login in mobile/web app
 - supports sign-in with social identity providers like Apple, Google, FB, Amazon, and enterprise identity providers via SAML 2.0 (Security Assertion Markup Language) and OpenID Connect
 
 **Microsoft Active Directory (AD):**
-- found on ay Windows Server with AD Domain services
+- found on a Windows Server with AD Domain services
 - db of objects: user accounts, computers, printers, file shares, security groups
 - centralized security management, create account and assign permissions
 
@@ -1516,7 +1516,7 @@ There are two patterns of app communication:
   - create our own AD in AWS, manage users locally, supports MFA
   - establish "trust" connections with our on-premises AD
 - AD Connector:
-  - directory Gateway (proxy) to redirect to on-premisesAD, supports MFA
+  - directory Gateway (proxy) to redirect to on-premises AD, supports MFA
   - users are managed on the on-premises AD
 - Simple AD
   - AD compatible managed on AWS
@@ -1542,7 +1542,7 @@ There are two patterns of app communication:
 - fast and quickly scalable to thousand of users
 - secured data, integrated with KMS
 - pay as you go service with monthly and hourly rates
-- best practice is to deploy workspaces as close as users (as many workspaces regions as center locations to minimize latency)
+- best practice is to deploy workspaces as close as possible to users (as many workspaces regions as center locations to minimize latency)
 - global service
 
 **AppStream 2.0:**
@@ -1558,7 +1558,7 @@ There are two patterns of app communication:
 - accessible via web-browser URLs or on popular hardware for AR/VR
 
 **IoT Core:**
-- "Internet of Things": the network of internet-connected  devices that are able to collect and transfer data
+- "Internet of Things": the network of internet-connected devices that are able to collect and transfer data
 - allow to easily connect IoT devices to the AWS Cloud, for ex connected car, fridges, lights etc..
 - serverless, secure & scalable to billions of devices and trillions of messages
 - app can communicate with devices even if they aren't connected
@@ -1605,7 +1605,7 @@ There are two patterns of app communication:
 - Pilot Light:
   - we have a cloud and we're going to run the core functions
 - Warm Standby:
-  - full version of the app ready in the cloud, but at minimum size
+  - full version of the app ready in the cloud but at minimum size
 - Multi-Site/Hot-Site:
   - full version of the app, at full size
   - ready to be used
@@ -1613,7 +1613,7 @@ There are two patterns of app communication:
   
 **AWS Elastic Disaster Recovery (DRS):**
 - used to be named "CloudEndure Disaster Recovery"
-- quickly and easily recover physicaln virtual and cloud-based servers into AWS
+- quickly and easily recover physical, virtual and cloud-based servers into AWS
 - for ex: protect most critical db, enterprise apps, protect data from ransomware attacks
 - continuous block-level replication for servers from corporate data center into the cloud using DRS (into a staging), thanks to an AWS Replication Agent
 - is disaster we can failover staging to production by creating bigger EC2 instances and EBS volumes
@@ -1627,20 +1627,20 @@ There are two patterns of app communication:
 **AWS Application Discovery Service:**
 - plan migration projects by gathering info about on-premises data centers
 - server utilization data and dependency mapping, important for migrations
-- Agentless Discovery (AWS Agentless Discovery Connector): VM inventory, config, and perf history such as CPU, memory, and disk usage
-- Agent-based Discovery (AWS Application Discovery Agent): system config, perf, running processes, and details of the network connections btw systems
+- Agentless Discovery (AWS Agentless Discovery Connector): VM inventory, config, and perf history such as CPU, memory and disk usage
+- Agent-based Discovery (AWS Application Discovery Agent): system config, perf, running processes and details of the network connections btw systems
 - resulting data can be viewed within AWS Migration Hub
 
 **AWS Application Migration Service (MGN):**
 - lift and shift (rehost) solution which simplify migrating app to AWS
-- conerts physical, virutal and cloud-based servers to run natively on AWS
-- continuous replication, then cutover from staging to production when ready to migrating
+- converts physical, virutal and cloud-based servers to run natively on AWS
+- continuous replication, then cutover from staging to production when ready to migrate
 
 **AWS Fault Injection Simulator (FIS):**
 - fully managed for running fault injection experiments on AWS workloads
 - based on Chaos Engineering: stressing an app by creating disruptive events (eg sudden increase of CPU/memory), observing how the system reponds and implementing improvements
 - help uncover hidden bugs and perf bottlenecks
-- supports EC2n ECS, EKS, RDS...
+- supports EC2, ECS, EKS, RDS...
 - FIS create an experiment template to generate disruptions
 
 **Step Functions:**
@@ -1660,12 +1660,12 @@ There are two patterns of app communication:
 - use cases: weather forecasting, surface imaging, communications, video broadcasts
 
 **AWS Pinpoint:**
-- scalable 2-way (outbound/inbound) marketing communicatiopn service
+- scalable 2-way (outbound/inbound) marketing communication service
 - supports email, SMS, push, voice, and in-app messaging
 - ability to segment and personalize messages with the right content to customers
 - possibility to receive replies
 - scales to billion of messages per day
-- for run campaigns by sending marketing, transactional SMS messages
+- to run campaigns by sending marketing, transactional SMS messages
 - streams events (text_sucess, text_delivered..) to SNS, Kinesis Data Firehose, CW Logs
 - create message templates, delivery schedules, full campaigns and highly-targeted segments
 
@@ -1732,7 +1732,7 @@ There are 6 pillars in the Well-Architected Tool:
   - change management: Auto Scalling, CW, CT, Config
   - Failure management: Backups, CF, S3, S3 Glacier, Route 53
 
-**Service Quotes (= Service Limits):** Service Quotas enables you to view and manage your quotas for AWS services from a central location. Quotas, also referred to as limits in AWS, are the maximum values for the resources, actions, and items in your AWS account. Each AWS service defines its quotas and establishes default values for those quotas.
+> **Service Quotes (= Service Limits):** Service Quotas enables you to view and manage your quotas for AWS services from a central location. Quotas, also referred to as limits in AWS, are the maximum values for the resources, actions, and items in your AWS account. Each AWS service defines its quotas and establishes default values for those quotas.
 
 **4. Performance Efficiency**
 - Includes the ability to use computing resources efficiently to meet system requirements and to maintain that efficiency as demand changes and technologies evolve
@@ -1768,9 +1768,9 @@ There are 6 pillars in the Well-Architected Tool:
   - understand our impact: establish perf indicators and evaluate improvements
   - establish sustainability goals: set long-term goals for each workload, model return on investment (ROI)
   - maximize utilization
-  - anticpate and adopt new, more efficient hardware and software offerrings
+  - anticipate and adopt new, more efficient hardware and software offerrings
   - used managed services: shared services reduce the amount of infra, managed services help automate sustainability best practices as moving infrequent accessed data to cold storage and adjusting compute capacity
-  - reduce the downstream impacy of our cloud workloads: reduce the amout of energy or resources required to use our services and reduce the need for our customers to updgrade their devices
+  - reduce the downstream impacy of our cloud workloads: reduce the amout of energy or resources required to use our services and reduce the need for our customers to upgrade their devices
 - Services:
   - EC2 Auto Scaling, Serverless Offering (Lambda, Fargate)
   - Cost Explorer, AWS Graviton 2, EC2 T instances, spot instances
@@ -1787,7 +1787,7 @@ Free tool to review our archi against the 6 pillars Well-Architected Framework a
 - right sizing = process of matching instance types and sizes to our workloads perf and capacity requirements at the lowest possible cost
 - scaling up is easy so always start small
 - also the process of looking at deployed instances and identifying opportunities to eliminate or downsize whithout compromizing capacity or other requirements, which results in lower costs
-- important to right size before a Cloud Migration  nd continuously after the cloud onboarding process (reuqirements change over time)
+- important to right size before a Cloud Migration and continuously after the cloud onboarding process (reuqirements change over time)
 - CW, Cost Explorer, Trusted Advisor, 3rd party tools can help
 
 **AWS Ecosystem:**
@@ -1803,7 +1803,7 @@ Free tool to review our archi against the 6 pillars Well-Architected Framework a
 - AWS Support Center:
   - hub for managing support cases
   - allow to open a Technical Support case online 
-- AWS Marketplace: digital catalog with thousands of software listings from independent software vendros (3rd party)
+- AWS Marketplace: digital catalog with thousands of software listings from independent software vendors (3rd party)
 - AWS Training:
   - AWS Digital (online) and Classroom Training (in-person or virtual)
   - AWS Private Training (for organization)
